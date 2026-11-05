@@ -49,6 +49,22 @@ h1{font-size:23px}
 .launch{grid-column:2;justify-self:start;margin-top:4px}
 }
 @media(prefers-reduced-motion:reduce){.tool{transition:none}}
+
+/* Two-column operations directory */
+.dashboard{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(250px,1fr);gap:52px;align-items:start}
+.tools-column,.links-column{min-width:0}
+.links-column{border-left:1px solid var(--border);padding-left:30px}
+.links-column .section-head h2{font-size:21px;letter-spacing:.15em;font-weight:760;line-height:1.2;margin:0;color:var(--navy)}
+.tools-column .tool{padding:22px 8px}
+.quick-links{display:flex;flex-direction:column}
+.quick-link{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border);padding:15px 3px;text-decoration:none;color:var(--navy);font-size:14px;font-weight:660}
+.quick-link:hover{background:#ece3d1}
+.quick-link svg{width:15px;height:15px;flex:none;color:#977438}
+@media(max-width:760px){
+  .dashboard{grid-template-columns:1fr;gap:42px}
+  .links-column{border-left:0;padding-left:0}
+  .quick-link{padding:14px 6px}
+}
 </style>
 </head>
 <body>
@@ -62,52 +78,31 @@ h1{font-size:23px}
   </div>
 </header>
 <main class="wrap">
-  <div class="section-head"><h1>TOOLS</h1><span class="count">09 / LINKS</span></div>
-  <a class="tool" href="./md-pdf/" aria-label="MD ↔ PDF Studio öffnen">
-    <span class="tool-number">01</span>
-    <div><h2>MD ↔ PDF Studio</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://studio.mowlsint.de/" target="_blank" rel="noopener noreferrer" aria-label="Radio Studio öffnen">
-    <span class="tool-number">02</span>
-    <div><h2>Radio Studio</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://studio.mowlsint.de/regie" target="_blank" rel="noopener noreferrer" aria-label="Senderegie öffnen">
-    <span class="tool-number">03</span>
-    <div><h2>Senderegie</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://mowlsint-monthly-signal.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="Kurzwellenschmiede öffnen">
-    <span class="tool-number">04</span>
-    <div><h2>Kurzwellenschmiede</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://mowlsint.github.io/FirstAlert/index.html" target="_blank" rel="noopener noreferrer" aria-label="First Alert öffnen">
-    <span class="tool-number">05</span>
-    <div><h2>First Alert</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://onoffrelationship.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="OnOffRelationShip öffnen">
-    <span class="tool-number">06</span>
-    <div><h2>OnOffRelationShip</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://honkytonk.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="HonkyTonk öffnen">
-    <span class="tool-number">07</span>
-    <div><h2>HonkyTonk</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://lg-generator.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="Greybook öffnen">
-    <span class="tool-number">08</span>
-    <div><h2>Greybook</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
-  <a class="tool" href="https://mowlsint.github.io/telegram_watch/index.html" target="_blank" rel="noopener noreferrer" aria-label="Telegram Watch öffnen">
-    <span class="tool-number">09</span>
-    <div><h2>Telegram Watch</h2></div>
-    <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
-  </a>
+  <div class="dashboard">
+
+  <section class="tools-column" aria-labelledby="tools-heading">
+    <div class="section-head"><h1 id="tools-heading">TOOLS</h1><span class="count">01</span></div>
+    <a class="tool" href="./md-pdf/" aria-label="MD ↔ PDF Studio öffnen">
+      <span class="tool-number">01</span>
+      <div><h2>MD ↔ PDF Studio</h2></div>
+      <span class="launch">ÖFFNEN <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+    </a>
+  </section>
+
+  <nav class="links-column" aria-labelledby="links-heading">
+    <div class="section-head"><h2 id="links-heading">LINKS</h2><span class="count">08</span></div>
+    <div class="quick-links">
+      <a class="quick-link" href="https://studio.mowlsint.de/" target="_blank" rel="noopener noreferrer"><span>Radio Studio</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://studio.mowlsint.de/regie" target="_blank" rel="noopener noreferrer"><span>Senderegie</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://mowlsint-monthly-signal.pages.dev/" target="_blank" rel="noopener noreferrer"><span>Kurzwellenschmiede</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://mowlsint.github.io/FirstAlert/index.html" target="_blank" rel="noopener noreferrer"><span>First Alert</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://onoffrelationship.pages.dev/" target="_blank" rel="noopener noreferrer"><span>OnOffRelationShip</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://honkytonk.pages.dev/" target="_blank" rel="noopener noreferrer"><span>HonkyTonk</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://lg-generator.pages.dev/" target="_blank" rel="noopener noreferrer"><span>Greybook</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <a class="quick-link" href="https://mowlsint.github.io/telegram_watch/index.html" target="_blank" rel="noopener noreferrer"><span>Telegram Watch</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+    </div>
+  </nav>
+  </div>
 </main>
 <footer><div class="wrap"><span>MOwlSINT TOOLZ</span><a href="https://github.com/mowlsint/toolz">SOURCE / GITHUB</a></div></footer>
 </body>
