@@ -7,6 +7,7 @@ Ein Portal für eigenständige Webwerkzeuge im MOwlSINT-Design (Elfenbein, Dark 
 - **Startseite:** https://mowlsint.github.io/toolz/
 - **MD ↔ PDF Studio:** https://mowlsint.github.io/toolz/md-pdf/ – Markdown → PDF, PDF → Markdown und Browser-OCR für Scan-PDFs.
 - **Geo Converter:** https://mowlsint.github.io/toolz/geo-converter/ – KML, CSV und GeoJSON in alle sechs Richtungen umwandeln; mit Spaltenzuordnung, Tabellen- und schematischer Geometrievorschau sowie Offline-Download.
+- **QSL Card Studio:** https://mowlsint.github.io/toolz/qsl-studio/ – Geprüfte Empfangsberichte in die ausfüllbare MOwlSINT-Retro-QSL-PDF eintragen, Vorschau und PDF-Download.
 
 ## GitHub Pages einschalten
 
@@ -23,6 +24,7 @@ Danach erscheint die Website unter https://mowlsint.github.io/toolz/.
 - md-pdf/index.html: eigenständiger Markdown-/PDF-Konverter.
 - md-pdf/browser-ocr.js: OCR im Browser für eingescannte PDFs.
 - geo-converter/index.html: eigenständiger KML-/CSV-/GeoJSON-Konverter ohne externe Abhängigkeiten.
+- qsl-studio/index.html: browserbasierter QSL-PDF-Editor mit manueller Freigabe, Vorlagenspeicherung in IndexedDB und Download.
 
 Weitere Tools können später unter eigenen Verzeichnissen ergänzt und von der Startseite aus verlinkt werden.
 
@@ -70,3 +72,13 @@ Die Regressionstests benötigen nur Node.js und keine zusätzlichen Pakete:
 ```sh
 node geo-converter/tests/converter.test.cjs
 ```
+
+## QSL Card Studio
+
+Die ursprüngliche **MOwlSINT_Radio_QSL_ausfuellbar.pdf** ist bewusst nicht öffentlich im GitHub-Repository abgelegt. Sie enthält das handgezeichnete New-Orleans-Motiv und **14 ausfüllbare AcroForm-Felder**. Beim ersten Besuch unter `/qsl-studio/` wird die Vorlage über **PDF-Vorlage auswählen** vom eigenen Gerät geöffnet; danach bleibt sie, soweit der Browser Speicherzugriff erlaubt, in IndexedDB auf diesem Gerät erhalten. Auf einem anderen Browser/Gerät muss die Vorlage erneut geladen werden. Das Programm akzeptiert nur die PDF mit den erwarteten Feldnamen.
+
+**Bedienung:** Vorlage einmalig laden, Hörerdaten eingeben, Sendungsdaten und Programminhalt manuell prüfen, Prüfhäkchen setzen, Vorschau erzeugen und `QSL als PDF herunterladen`. Standardmäßig werden die Formulareinträge beim Export festgeschrieben (flattened PDF) – die Empfänger können das PDF nicht versehentlich in einem Formular weiterbearbeiten. E-Mail-Versand ist nicht Teil dieses Tools.
+
+**Datenverarbeitung:** Keine Hörerdaten werden an den Server gesendet, kein serverseitiges Protokoll; die PDF-Verarbeitung erfolgt mit [pdf-lib 1.17.1](https://pdf-lib.js.org/) (MIT) im Browser, das Javascript wird von jsDelivr nachgeladen. Beim blockierten CDN kann das Tool keine PDFs erstellen. Die Vorlage wird lokal im Browser gespeichert, Hörerdaten dagegen nicht dauerhaft gespeichert. Eine Webseite ist öffentlich erreichbar; der PDF-Editor ist daher kein authentifiziertes Ausstellungsportal. Die rein manuelle Prüffreigabe ist keine technische Zugangskontrolle. Für die Ausgabe von QSL-Karten nur selbst überprüfte Empfangsberichte verwenden.
+
+**Zeichensatz:** pdf-lib nutzt hier Times Roman (WinAnsi). Westeuropäische Sonderzeichen wie ä, ö, ü, ß und ã funktionieren, andere Schriften (z. B. Kyrillisch) benötigen eine Erweiterung um eigene Unicode-Fonts und fontkit. Bei nicht unterstützten Zeichen zeigt das Tool eine Fehlermeldung und erstellt nicht stillschweigend eine fehlerhafte Karte.
