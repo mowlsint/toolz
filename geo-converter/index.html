@@ -2,47 +2,307 @@
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="KML, CSV und GeoJSON im Browser umwandeln. Für Positionen, Schiffstracks und Geodaten. Auch offline."><title>MOwlSINT · Geo Converter</title>
 <style>
 :root{--ink:#172b38;--muted:#667780;--teal:#08796e;--mint:#e3f1eb;--line:#dce3e2;--paper:#f4f6f4;--orange:#e79540;--white:#fff;--nav:#122c39}*{box-sizing:border-box}body{margin:0;font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:var(--paper)}button,input,select,textarea{font:inherit}button,select{cursor:pointer}button{transition:background .15s,transform .15s}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #ecab61;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.42}button:hover:not(:disabled){filter:brightness(.96)}.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}aside{background:var(--nav);color:#e5eeef;padding:32px 23px;display:flex;flex-direction:column;position:fixed;width:220px;inset:0 auto 0 0}.brand{display:flex;align-items:center;gap:11px;font-size:18px;letter-spacing:.04em;font-weight:750}.mark{width:33px;height:33px;border:1px solid #88afa7;border-radius:50%;display:grid;place-items:center;font-size:23px;color:#b4ddca}.brand small{display:block;font:10px/1.5 system-ui;letter-spacing:.22em;color:#97aaaF}.portal-link{color:inherit;text-decoration:none}.portal-link:hover{text-decoration:underline}.portal-back{display:block;font-size:12px;margin-top:30px;color:#b4ddca}.side-label{font-size:10px;letter-spacing:.14em;color:#93a8b2;margin:48px 12px 14px}.side-item{background:#26434b;color:#e5f6ee;padding:12px 15px;border-radius:7px;display:flex;gap:12px;align-items:center}.side-bottom{margin-top:auto;font-size:12px;color:#a9babe}.side-bottom p{padding-top:18px;border-top:1px solid #35505a}.badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;border-radius:20px;padding:5px 10px;border:1px solid #cde0d9;color:#346558;background:#f4faf7}.badge:before{content:'';height:6px;width:6px;background:#339575;border-radius:50%}main{grid-column:2;min-width:0}header{height:72px;background:#fff;border-bottom:1px solid var(--line);padding:0 42px;display:flex;align-items:center;justify-content:space-between}.crumb{font-size:12px;color:var(--muted)}.crumb b{color:var(--ink);font-weight:500}.content{max-width:1450px;margin:auto;padding:36px 42px 26px}.eyebrow{font-size:10px;letter-spacing:.17em;color:var(--teal);font-weight:750;text-transform:uppercase}h1{font-size:34px;letter-spacing:-1.1px;margin:7px 0 7px;font-weight:650;line-height:1.2}.intro{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:29px}.intro p{margin:0;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 16px;border-radius:6px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}.btn.primary{background:var(--teal);border-color:var(--teal);color:white}.btn.ghost{background:transparent}.btn.small{padding:6px 11px;font-size:12px}.workspace{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(290px,1fr);gap:22px;align-items:start}.card{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 2px 2px #182e3903}.card-head{padding:19px 22px 16px;display:flex;justify-content:space-between;align-items:center;gap:15px}.card-head h2{font-size:15px;margin:0;font-weight:650}.step{color:#8b9c9f;font:11px ui-monospace,monospace;margin-right:8px}.card-body{padding:0 22px 22px}.drop{padding:30px 18px 25px;border:1.5px dashed #becfca;border-radius:7px;display:block;text-align:center;background:#f9fbf9;cursor:pointer}.drop.over{background:var(--mint);border-color:var(--teal)}.upload-icon{margin:0 auto 12px;width:42px;height:42px;border:1px solid #d7e3de;background:#fff;border-radius:11px;display:grid;place-items:center;color:var(--teal);font-size:24px}.drop strong{font-size:14px;display:block;font-weight:600}.drop small{display:block;margin:6px 0 15px;color:var(--muted)}.formats{font:10px ui-monospace,monospace;letter-spacing:.08em;color:#6f8581}.hidden{display:none!important}.upload-tools{display:flex;justify-content:space-between;align-items:center;margin-top:13px;gap:10px}.text-button{border:0;background:none;color:var(--teal);padding:2px;font-size:12px}.hint{font-size:11px;color:var(--muted)}.file-summary{margin-top:17px;padding:13px;background:#f4f8f5;border:1px solid #dce9df;border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:10px}.file-summary strong{font-size:12px;word-break:break-all}.file-summary small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.status{font-size:12px;color:#376f5a}.notice{font-size:12px;background:#fff6e8;color:#82521b;border:1px solid #eed7b3;padding:12px 14px;border-radius:6px;margin-top:14px;white-space:pre-line;max-height:170px;overflow:auto}.notice.error{color:#8d3933;background:#fff0ed;border-color:#eecac2}.mapping{margin-top:17px;border-top:1px solid var(--line);padding-top:15px}.mapping h3{font-size:12px;margin:0 0 9px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label.field{font-size:11px;color:var(--muted);display:grid;gap:5px}select,input[type=text]{border:1px solid #ccd6d4;border-radius:5px;background:white;color:var(--ink);padding:8px;width:100%;min-width:0}.mapping .btn{margin-top:12px}textarea{width:100%;min-height:130px;border:1px solid var(--line);border-radius:6px;padding:11px;resize:vertical;font:12px ui-monospace,monospace}.paste{margin-top:15px}.export-options{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.format{border:1px solid var(--line);background:white;border-radius:7px;padding:15px 5px;text-align:center;color:var(--muted)}.format strong{display:block;font:600 14px ui-monospace,monospace;color:var(--ink)}.format small{font-size:10px;display:block;margin-top:5px}.format.active{border:1.5px solid var(--teal);background:#f2f8f4;color:var(--teal);position:relative}.format.active:after{content:'✓';position:absolute;right:6px;top:2px;font-size:10px}.export-details{font-size:12px;color:var(--muted);margin:16px 0;min-height:36px}.export-field{margin-bottom:14px}.export-card .primary{width:100%;margin-top:4px}.export-foot{text-align:center;margin-top:10px;font-size:10px;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:22px 0}.stat{border:1px solid var(--line);border-radius:8px;background:white;padding:15px 18px}.stat .label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.stat strong{display:block;font-size:24px;font-weight:600;margin-top:3px}.stat small{font-size:10px;color:var(--muted)}.preview .card-head{border-bottom:1px solid var(--line);padding-bottom:0;align-items:center}.tabs{display:flex;gap:18px}.tab{border:0;background:none;color:var(--muted);padding:0 0 17px;font-size:12px;border-bottom:2px solid transparent}.tab.active{color:var(--teal);border-color:var(--teal);font-weight:600}.preview .card-head h2{padding-bottom:17px}.table-wrap{overflow:auto;max-height:340px;min-height:220px}table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:12px;text-align:left}th{position:sticky;top:0;background:#f6f8f6;z-index:1;font-size:10px;letter-spacing:.03em;color:#677c80;font-weight:600}td,th{padding:11px 17px;border-bottom:1px solid #eef1ef;max-width:260px;text-overflow:ellipsis;overflow:hidden}td{font:11px ui-monospace,monospace}td:first-child{color:var(--muted)}.empty{display:grid;place-items:center;text-align:center;min-height:220px;color:#83928f;font-size:13px;padding:25px}.empty span{font-size:30px;color:#b0bfba;display:block;margin-bottom:9px}.preview-foot{display:flex;justify-content:space-between;padding:11px 19px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);gap:15px}.code-preview{margin:0;padding:17px;font:11px/1.6 ui-monospace,monospace;white-space:pre-wrap;overflow:auto;max-height:340px;min-height:220px;background:#fafcfb}.geometry-view{position:relative;background:#f6f9f7;min-height:260px}.geometry-view svg{display:block;width:100%;height:285px}.geometry-note{position:absolute;bottom:10px;left:15px;font:10px ui-monospace,monospace;color:#627b74}.help{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.help div{padding:14px 0}.help h3{font-size:12px;margin:0 0 5px;font-weight:650}.help p{font-size:11px;color:var(--muted);margin:0}.footer{display:flex;justify-content:space-between;font-size:10px;color:#83928f;border-top:1px solid var(--line);padding-top:18px;margin-top:17px}.screen-reader{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}.busy{pointer-events:none;opacity:.6}details{font-size:12px;color:var(--muted)}summary{cursor:pointer}.rights{margin-top:10px;font-size:10px;color:#8fa4aa} @media(min-width:1600px){.content{padding-top:48px}}@media(max-width:1100px){aside{width:175px;padding:28px 16px}.layout{grid-template-columns:175px 1fr}.brand{font-size:15px}header{padding:0 25px}.content{padding:28px 25px}.workspace{grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr)}.intro{align-items:flex-start}h1{font-size:29px}}@media(max-width:800px){aside{display:none}.layout{display:block}main{display:block}header{height:57px}.content{padding:25px 18px}.workspace{grid-template-columns:1fr}.intro{display:block}.intro>.btn{margin-top:15px}.stats{grid-template-columns:repeat(2,1fr);gap:10px}.help{grid-template-columns:1fr;gap:0}.tabs{gap:11px}.preview .card-head{padding:16px 13px 0}.card-head h2{font-size:13px}.tab{font-size:11px}.crumb{font-size:11px}.badge{font-size:10px}.footer{gap:15px}.stat{padding:12px 16px}}
+
+.review{margin:22px 0}.review .card-body{padding-top:0}.review-summary{font-size:13px;font-weight:600;padding:12px;background:#f3f8f5;border-radius:6px}.review-changes p{margin:4px 0;font-size:11px;color:var(--muted)}.review .issues{max-height:300px;overflow:auto;margin:12px 0;font-size:12px}.review .issues td{white-space:pre-wrap;min-width:90px;max-width:420px;overflow-wrap:anywhere;vertical-align:top}.review .issues td:nth-child(3){min-width:260px}.review .source-sample{overflow:auto;max-height:190px;margin:12px 0}.mapping details{margin-top:12px}.mapping .form-grid{margin:10px 0}.mapping .check{display:flex;align-items:flex-start;gap:8px;font-size:12px;margin:12px 0}.mapping .check input{margin-top:4px}.review .card-head h2{font-size:15px}.encoding-options{margin-top:14px}.review h3{font-size:12px;margin-top:17px}.small-note{font-size:11px;color:var(--muted);margin:10px 0}.bounds{font-size:12px;color:var(--ink);margin-top:12px}.source-sample td{white-space:pre-wrap;min-width:90px}.mapping .btn.primary{margin-right:10px}@media(max-width:800px){.review .card-head{align-items:flex-start;flex-wrap:wrap}}
 </style></head><body>
-<div class="layout"><aside><div class="brand"><div class="mark">✧</div><div>MOwlSINT<small>ANALYST TOOLS</small></div></div><a class="portal-link portal-back" href="../">← TOOLZ Übersicht</a><div class="side-label">WERKZEUGE</div><div class="side-item"><span aria-hidden="true">⇄</span> Geo Converter</div><div class="side-bottom"><span style="color:#bcddcf">●</span> Lokal verarbeitet<p>Ein Werkzeug für deine<br>Positionen, Tracks und Geodaten.</p><div class="rights">GEO CONVERTER / 1.0</div></div></aside>
+<div class="layout"><aside><div class="brand"><div class="mark">✧</div><div>MOwlSINT<small>ANALYST TOOLS</small></div></div><a class="portal-link portal-back" href="../">← TOOLZ Übersicht</a><div class="side-label">WERKZEUGE</div><div class="side-item"><span aria-hidden="true">⇄</span> Geo Converter</div><div class="side-bottom"><span style="color:#bcddcf">●</span> Lokal verarbeitet<p>Ein Werkzeug für deine<br>Positionen, Tracks und Geodaten.</p><div class="rights">GEO CONVERTER / 1.1</div></div></aside>
 <main><header><div class="crumb"><a class="portal-link" href="../">TOOLZ</a><span class="portal-link"> &nbsp; / &nbsp; </span><b>Geo Converter</b></div><span class="badge">Dateien bleiben im Browser</span></header><div class="content"><div class="intro"><div><div class="eyebrow">Geodaten · Einfach umwandeln</div><h1>Ein Datensatz. Drei Formate.</h1><p>KML, CSV und GeoJSON importieren, prüfen und umwandeln.</p></div><button class="btn" id="offline"><span aria-hidden="true">↓</span> Offline-Version</button></div>
-<div class="workspace"><section class="card"><div class="card-head"><h2><span class="step">01</span> Datei importieren</h2><span class="hint">KML · CSV · GEOJSON</span></div><div class="card-body"><label class="drop" id="drop" for="file"><div class="upload-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg></div><strong>Datei hier ablegen</strong><small>oder klicken und eine Datei auswählen</small><span class="formats">.KML &nbsp; .CSV &nbsp; .GEOJSON &nbsp; .JSON</span><input class="screen-reader" type="file" id="file" accept=".kml,.csv,.geojson,.json,application/json"></label><div class="upload-tools"><button class="text-button" id="pasteToggle">Text einfügen</button><button class="text-button" id="demo">Beispieldaten laden ↗</button></div><div id="paste" class="paste hidden"><label class="field" for="pasteText">KML-, CSV- oder GeoJSON-Text</label><textarea id="pasteText" spellcheck="false" placeholder="Daten hier einfügen …"></textarea><button class="btn small" id="pasteLoad">Text einlesen</button></div><div id="fileSummary" class="file-summary hidden"><div><strong id="fileName"></strong><small id="fileMeta"></small></div><button class="text-button" id="clear" aria-label="Datei entfernen">Entfernen ×</button></div><div id="message" class="hidden" role="status" aria-live="polite"></div><div id="mapping" class="mapping hidden"><h3>CSV-Spalten zuordnen</h3><p class="hint" id="mappingHint"></p><div class="form-grid"><label class="field">Längengrad (Longitude)<select id="lon"></select></label><label class="field">Breitengrad (Latitude)<select id="lat"></select></label><label class="field">Höhe, optional<select id="alt"></select></label><label class="field">Trennzeichen<select id="inputDelimiter"><option value="auto">Automatisch</option><option value=",">Komma</option><option value=";">Semikolon</option><option value="&#9;">Tabulator</option></select></label></div><button class="btn small" id="applyMapping">Zuordnung anwenden</button></div></div></section>
+<div class="workspace"><section class="card"><div class="card-head"><h2><span class="step">01</span> Datei importieren</h2><span class="hint">KML · CSV · GEOJSON</span></div><div class="card-body"><label class="drop" id="drop" for="file"><div class="upload-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg></div><strong>Datei hier ablegen</strong><small>oder klicken und eine Datei auswählen</small><span class="formats">.KML &nbsp; .CSV &nbsp; .GEOJSON &nbsp; .JSON</span><input class="screen-reader" type="file" id="file" accept=".kml,.csv,.geojson,.json,application/json"></label><div class="upload-tools"><button class="text-button" id="pasteToggle">Text einfügen</button><button class="text-button" id="demo">Beispieldaten laden ↗</button></div><div id="paste" class="paste hidden"><label class="field" for="pasteText">KML-, CSV- oder GeoJSON-Text</label><textarea id="pasteText" spellcheck="false" placeholder="Daten hier einfügen …"></textarea><button class="btn small" id="pasteLoad">Text einlesen</button></div><div id="fileSummary" class="file-summary hidden"><div><strong id="fileName"></strong><small id="fileMeta"></small></div><button class="text-button" id="clear" aria-label="Datei entfernen">Entfernen ×</button></div><div id="encodingOptions" class="encoding-options hidden"><label class="field">Zeichenkodierung<select id="encoding"><option value="auto">Automatisch (UTF-8 / BOM)</option><option value="utf-8">UTF-8</option><option value="windows-1252">Windows-1252 (ältere Excel-Dateien)</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option></select></label></div><div id="message" class="hidden" role="status" aria-live="polite"></div><div id="mapping" class="mapping hidden"><h3>CSV-Import prüfen</h3><p class="hint" id="mappingHint"></p><p class="hint" id="headerDetected"></p>
+<div class="form-grid"><label class="field">Trennzeichen<select id="inputDelimiter"><option value="auto">Automatisch</option><option value=",">Komma</option><option value=";">Semikolon</option><option value="&#9;">Tabulator</option></select></label><label class="field">Kopfzeile (Zeilennummer)<input type="text" id="headerLine" inputmode="numeric" placeholder="Automatisch"></label></div>
+<div class="form-grid"><label class="field">Längengrad (Longitude)<select id="lon"><option value="">Bitte wählen</option></select></label><label class="field">Breitengrad (Latitude)<select id="lat"><option value="">Bitte wählen</option></select></label><label class="field">Schiffsnummer (optional)<select id="ship"><option value="">Bitte wählen</option></select></label><label class="field">MMSI (optional)<select id="mmsi"><option value="">Bitte wählen</option></select></label></div><button class="btn small" id="swapAxes">Longitude / Latitude tauschen</button>
+<details><summary>Weitere Spalten zuordnen</summary><div class="form-grid"><label class="field">Höhe (optional)<select id="alt"><option value="">Keine Zuordnung</option></select></label><label class="field">Schiffsname (optional)<select id="name"><option value="">Keine Zuordnung</option></select></label><label class="field">Zeitangabe (optional)<select id="time"><option value="">Keine Zuordnung</option></select></label></div></details>
+<div class="form-grid"><label class="field">Bei fehlerhaften Datensätzen<select id="importMode"><option value="strict">Alle müssen gültig sein</option><option value="valid">Nur gültige übernehmen</option></select></label><label class="field">Bei CSV-/JSON-Widersprüchen<select id="csvPolicy"><option value="ask">Auswahl erforderlich</option><option value="table">Tabellenspalten verwenden</option><option value="json">JSON-Spalten verwenden</option></select></label></div>
+<label class="check"><input type="checkbox" id="skipHeaders"><span>Erkannte wiederholte Kopfzeilen im Datenblock überspringen</span></label><p class="small-note">Mehrdeutige Zeilen werden nicht automatisch verschoben. Die Vorschau und der Prüfbericht zeigen die Befunde.</p><button class="btn primary" id="applyMapping">Import bestätigen</button></div></div></section>
 <section class="card export-card"><div class="card-head"><h2><span class="step">02</span> Zielformat wählen</h2></div><div class="card-body"><div class="export-options" role="group" aria-label="Zielformat"><button class="format active" data-format="geojson" aria-pressed="true"><strong>GeoJSON</strong><small>GIS & Analyse</small></button><button class="format" data-format="csv" aria-pressed="false"><strong>CSV</strong><small>Tabelle & Austausch</small></button><button class="format" data-format="kml" aria-pressed="false"><strong>KML</strong><small>Google Earth & GIS</small></button></div><p class="export-details" id="formatDescription"></p><label class="field export-field">Dateiname<input type="text" id="outputName" value="geodaten" maxlength="180"></label><div id="csvOptions" class="hidden"><label class="field export-field">CSV-Trennzeichen<select id="outputDelimiter"><option value=";">Semikolon (Excel DE)</option><option value=",">Komma</option><option value="&#9;">Tabulator</option></select></label></div><button class="btn primary" id="download" disabled><span aria-hidden="true">↓</span> <span id="downloadLabel">GeoJSON herunterladen</span></button><div class="export-foot" id="exportFoot">Zuerst eine Datei importieren</div></div></section></div>
+<section class="card review hidden" id="review"><div class="card-head"><h2>Importprüfung</h2><button class="btn small" id="reportDownload" disabled>Prüfbericht herunterladen</button></div><div class="card-body"><div id="reviewSummary" class="review-summary" aria-live="polite"></div><div id="reviewChanges" class="review-changes"></div><div id="bounds" class="bounds"></div><details open><summary>Originalzeilen und Befunde</summary><div id="sourceSample" class="source-sample"></div><div id="issues" class="issues"></div></details></div></section>
 <div class="stats"><div class="stat"><span class="label">Objekte</span><strong id="nFeatures">—</strong><small>Einträge im Datensatz</small></div><div class="stat"><span class="label">Positionen</span><strong id="nPoints">—</strong><small>Koordinaten aller Geometrien</small></div><div class="stat"><span class="label">Geometrien</span><strong id="nTypes" style="font-size:18px;min-height:36px;padding-top:6px">—</strong><small id="typeDetail">Punkte, Linien, Flächen</small></div><div class="stat"><span class="label">Datenfelder</span><strong id="nFields">—</strong><small>Attribute bleiben erhalten</small></div></div>
 <section class="card preview"><div class="card-head"><h2>Datenvorschau</h2><div class="tabs" role="tablist" aria-label="Datenvorschau"><button class="tab active" role="tab" aria-selected="true" data-tab="table" id="tab-table" aria-controls="panel-table">Tabelle</button><button class="tab" role="tab" aria-selected="false" data-tab="geometry" id="tab-geometry" aria-controls="panel-geometry">Geometrie</button><button class="tab" role="tab" aria-selected="false" data-tab="json" id="tab-json" aria-controls="panel-json">GeoJSON</button></div></div><div id="panel-table" role="tabpanel" aria-labelledby="tab-table"><div class="empty"><div><span aria-hidden="true">⌖</span>Deine Datenvorschau erscheint hier.<br><small>Importiere eine Datei oder lade das Beispiel.</small></div></div></div><div id="panel-geometry" role="tabpanel" aria-labelledby="tab-geometry" class="hidden geometry-view"></div><pre id="panel-json" role="tabpanel" aria-labelledby="tab-json" class="hidden code-preview"></pre><div class="preview-foot"><span id="previewCount">Noch keine Daten geladen</span><span>WGS 84 · Longitude, Latitude</span></div></section>
-<div class="help"><div><h3>↔ &nbsp; In alle Richtungen</h3><p>Alle sechs Umwandlungen zwischen KML, CSV und GeoJSON. Punkte, Linien, Polygone und Mehrfachgeometrien.</p></div><div><h3>⌖ &nbsp; Für maritime Daten</h3><p>MMSI, IMO, Schiffsnamen, Zeitangaben und weitere Attribute werden übernommen. CSV benötigt Koordinaten oder eine Geometriespalte.</p></div><div><h3>◇ &nbsp; Auch ohne Verbindung</h3><p>Offline-Version herunterladen und im Browser öffnen. Kein Konto, keine Installation und kein Upload der Datendateien erforderlich.</p></div></div><details><summary>Was wird erhalten? Hinweise zu den Formaten</summary><p>Geometrien und Attribute werden übernommen. Die Austausch-CSV enthält <code>__geometry</code> und <code>__properties</code> als JSON sowie lesbare Attributspalten. Eine Zeile entspricht einem Objekt, auch bei Linien und Polygonen. Die JSON-Spalten sind beim erneuten Import maßgeblich und erhalten verschachtelte Werte und Datentypen. <code>longitude</code>, <code>latitude</code> und <code>altitude</code> stehen bei Punkten zusätzlich bereit.</p><p>KML-ExtendedData, Zeitstempel und gx:Track-Zeitangaben werden eingelesen. KML-Ausgaben speichern Attribute zusätzlich in einem eigenen ExtendedData-Feld, um sie beim Rückimport wiederherzustellen. KML-Stile, Icons, Overlays, Touren, Ansichten und Ordnerstruktur werden nicht rekonstruiert. Externe NetworkLinks werden nicht geladen. CSV-Spalten mit fehlenden oder ungültigen Koordinaten führen zu einer Fehlermeldung; Zeilen werden nicht stillschweigend ausgelassen. IDs und MMSI aus CSV bleiben Text.</p><p>Koordinaten müssen WGS 84 in Dezimalgrad sein. Komma als Dezimaltrennzeichen ist in CSV zulässig, wenn der Wert korrekt durch Semikolon, Tabulator oder Anführungszeichen abgegrenzt ist. DMS- und projizierte Koordinaten werden nicht automatisch umgerechnet. Linien werden nicht automatisch aus einzelnen AIS-Positionen gebildet. Vorschau: maximal 100 Tabellenzeilen und 12.000 Positionen in der schematischen Geometrieansicht; der Export enthält alle Daten. KMZ wird nicht unterstützt. Maximal 30 MB pro Datei.</p></details><footer class="footer"><span>MOwlSINT / ANALYST TOOLS</span><span>Geo Converter 1.0 &nbsp; · &nbsp; Verarbeitung auf deinem Gerät</span></footer></div></main></div>
+<div class="help"><div><h3>↔ &nbsp; In alle Richtungen</h3><p>Alle sechs Umwandlungen zwischen KML, CSV und GeoJSON. Punkte, Linien, Polygone und Mehrfachgeometrien.</p></div><div><h3>⌖ &nbsp; Für maritime Daten</h3><p>MMSI, Schiffsnummern, Schiffsnamen, Zeitangaben und weitere Attribute werden übernommen. CSV benötigt Koordinaten oder eine Geometriespalte.</p></div><div><h3>◇ &nbsp; Auch ohne Verbindung</h3><p>Offline-Version herunterladen und im Browser öffnen. Kein Konto, keine Installation und kein Upload der Datendateien erforderlich.</p></div></div><details><summary>Was wird erhalten? Hinweise zu den Formaten</summary><p>Geometrien und Attribute werden übernommen. Die Austausch-CSV enthält <code>__geometry</code> und <code>__properties</code> als JSON sowie lesbare Attributspalten. Eine Zeile entspricht einem Objekt, auch bei Linien und Polygonen. Die JSON-Spalten erhalten verschachtelte Werte und Datentypen. Bei Abweichungen zu den sichtbaren Tabellenspalten ist vor dem Import eine Auswahl erforderlich. Nicht angezeigte Originalattribute bleiben erhalten. <code>longitude</code>, <code>latitude</code> und <code>altitude</code> stehen bei Punkten zusätzlich bereit.</p><p>KML-ExtendedData, Zeitstempel und gx:Track-Zeitangaben werden eingelesen. KML-Ausgaben speichern Attribute zusätzlich in einem eigenen ExtendedData-Feld, um sie beim Rückimport wiederherzustellen. KML-Stile, Icons, Overlays, Touren, Ansichten und Ordnerstruktur werden nicht rekonstruiert. Externe NetworkLinks werden nicht geladen. Fehlerhafte CSV-Zeilen werden im Prüfbericht aufgeführt. Im strikten Modus verhindern sie den Import; alternativ lassen sich ausdrücklich nur gültige Datensätze übernehmen. Wiederholte Kopfzeilen werden nur nach Auswahl übersprungen. Schiffsnummer, IDs und MMSI aus CSV bleiben Text. IMO und ENI sind alternative Header für Schiffsnummer; es erfolgt keine automatische Kennungstyp-Prüfung. Führende Nullen werden nicht ergänzt.</p><p>Koordinaten müssen WGS 84 in Dezimalgrad sein. Komma als Dezimaltrennzeichen ist in CSV zulässig, wenn der Wert korrekt durch Semikolon, Tabulator oder Anführungszeichen abgegrenzt ist. DMS- und projizierte Koordinaten werden nicht automatisch umgerechnet. Linien werden nicht automatisch aus einzelnen AIS-Positionen gebildet. Vorschau: maximal 100 Tabellenzeilen und 12.000 Positionen in der schematischen Geometrieansicht; der Export enthält alle Daten. KMZ wird nicht unterstützt. Maximal 30 MB pro Datei.</p></details><footer class="footer"><span>MOwlSINT / ANALYST TOOLS</span><span>Geo Converter 1.1 &nbsp; · &nbsp; Verarbeitung auf deinem Gerät</span></footer></div></main></div>
 <script>
 'use strict';
 const Geo=(()=>{
 const fail=s=>{throw Error(s)},obj=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
 const reserved=['__geometry','__properties','__id','__feature_extra','longitude','latitude','altitude','geometry_type'];
-const xml=s=>String(s??'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
-function validateGeometry(g){if(g===null)return;if(!obj(g))fail('Ungültige Geometrie.');
+const xml=s=>{const v=String(s??'');if(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(v))fail('Attribut enthält ein für KML unzulässiges Steuerzeichen.');return v.replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));};
+function validateGeometry(g,depth=0){if(depth>80)fail("Geometrie zu tief verschachtelt (maximal 80 Ebenen).");if(g===null)return;if(!obj(g))fail('Ungültige Geometrie.');
  const pos=c=>{if(!Array.isArray(c)||c.length<2||c.length>3||c.some(n=>typeof n!=='number'||!Number.isFinite(n)))fail('Koordinaten müssen zwei oder drei endliche Zahlen enthalten.');if(Math.abs(c[0])>180||Math.abs(c[1])>90)fail('Koordinaten außerhalb von WGS 84: Longitude ±180°, Latitude ±90°.');};
  const line=c=>{if(!Array.isArray(c)||c.length<2)fail('Eine Linie benötigt mindestens zwei Positionen.');c.forEach(pos)};
  const poly=c=>{if(!Array.isArray(c)||!c.length)fail('Polygon ohne Ringe.');c.forEach(r=>{if(!Array.isArray(r)||r.length<4)fail('Ein Polygonring benötigt mindestens vier Positionen.');r.forEach(pos);if(JSON.stringify(r[0])!==JSON.stringify(r.at(-1)))fail('Polygonring ist nicht geschlossen.');})};
  const many=(c,fn)=>{if(!Array.isArray(c)||!c.length)fail('Leere Mehrfachgeometrie.');c.forEach(fn)};
- switch(g.type){case'Point':pos(g.coordinates);break;case'MultiPoint':many(g.coordinates,pos);break;case'LineString':line(g.coordinates);break;case'MultiLineString':many(g.coordinates,line);break;case'Polygon':poly(g.coordinates);break;case'MultiPolygon':many(g.coordinates,poly);break;case'GeometryCollection':if(!Array.isArray(g.geometries))fail('GeometryCollection ohne Geometrien.');g.geometries.forEach(x=>{if(x===null)fail('Null-Geometrie in GeometryCollection.');validateGeometry(x)});break;default:fail('Nicht unterstützte Geometrie: '+g.type)}
+ switch(g.type){case'Point':pos(g.coordinates);break;case'MultiPoint':many(g.coordinates,pos);break;case'LineString':line(g.coordinates);break;case'MultiLineString':many(g.coordinates,line);break;case'Polygon':poly(g.coordinates);break;case'MultiPolygon':many(g.coordinates,poly);break;case'GeometryCollection':if(!Array.isArray(g.geometries))fail('GeometryCollection ohne Geometrien.');g.geometries.forEach(x=>{if(x===null)fail('Null-Geometrie in GeometryCollection.');validateGeometry(x,depth+1)});break;default:fail('Nicht unterstützte Geometrie: '+g.type)}
 }
 function collection(value){let fc;if(value?.type==='FeatureCollection'){fc=value;if(!Array.isArray(fc.features))fail('FeatureCollection ohne Feature-Liste.')}else if(value?.type==='Feature')fc={type:'FeatureCollection',features:[value]};else fc={type:'FeatureCollection',features:[{type:'Feature',properties:{},geometry:value}]};
  if(fc.crs)fail('GeoJSON mit explizitem CRS: Bitte zuerst in WGS 84 / RFC 7946 umprojizieren und crs entfernen.');
  if(!fc.features.length)fail('Die Datei enthält keine Objekte.');fc.features.forEach((f,i)=>{try{if(f.type!=='Feature'||!('geometry'in f))fail('Ungültiges Feature.');if(f.properties!==null&&!obj(f.properties))fail('Attribute müssen ein Objekt oder null sein.');if('id'in f&&typeof f.id!=='string'&&typeof f.id!=='number')fail('Feature-ID muss Text oder Zahl sein.');validateGeometry(f.geometry)}catch(e){fail('Objekt '+(i+1)+': '+e.message)}});return fc;
 }
-function csvRows(text,delimiter){const rows=[];let row=[],value='',quoted=false,closed=false,start=true;text=text.replace(/^\uFEFF/,'');
- for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'){if(text[i+1]==='"'){value+='"';i++}else{quoted=false;closed=true}}else value+=c;continue}if(c==='"'){if(!start)fail('CSV: Anführungszeichen innerhalb eines ungeschützten Feldes.');quoted=true;start=false;continue}if(c===delimiter){row.push(value);value='';closed=false;start=true}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(value);if(row.some(x=>x!==''))rows.push(row);row=[];value='';closed=false;start=true}else{if(closed)fail('CSV: Zeichen nach schließendem Anführungszeichen.');value+=c;start=false}}
- if(quoted)fail('CSV: Nicht geschlossenes Anführungszeichen.');row.push(value);if(row.some(x=>x!==''))rows.push(row);return rows;
+// CSV import: preserve record boundaries, inspect headers and report every exclusion.
+const normalHeader = s => String(s).normalize('NFKC').toLowerCase().replace(/[\s_\-./()[\]:°]+/g, '');
+const aliases = {
+  lon: ['longitude', 'lon', 'lng', 'long', 'x', 'laenge', 'länge', 'laengengrad', 'längengrad', 'gpslongitude', 'gpslon', 'positionlongitude'],
+  lat: ['latitude', 'lat', 'y', 'breite', 'breitengrad', 'gpslatitude', 'gpslat', 'positionlatitude'],
+  alt: ['altitude', 'alt', 'elevation', 'height', 'z', 'hoehe', 'höhe'],
+  ship: ['schiffsnummer', 'schiffnummer', 'shipnumber', 'shipno', 'vesselnumber', 'vesselno', 'imo', 'imonumber', 'imono', 'eni', 'eninumber', 'enino', 'imoeni', 'eniimo'],
+  name: ['name', 'shipname', 'vesselname', 'schiffsname', 'schiffname'],
+  mmsi: ['mmsi', 'mmsinumber', 'mmsino', 'maritimemobileserviceidentity'],
+  time: ['timestamp', 'time', 'datetime', 'date', 'zeit', 'zeitstempel', 'positiontime', 'recordedat', 'utc', 'basedatetime'],
+  geometry: ['geometry', 'geometryjson', 'geojson', '__geometry'].map(normalHeader)
+};
+const meaning = h => Object.keys(aliases).find(k => aliases[k].includes(normalHeader(h))) || '';
+function suggest(headers) {
+  return Object.fromEntries(['lon', 'lat', 'alt', 'ship', 'name', 'mmsi', 'time'].map(k => [k, headers.find(h => aliases[k].includes(normalHeader(h))) || '']));
 }
-function readCSV(text,delimiter='auto'){if(delimiter==='auto'){let best=-Infinity;for(const d of [',',';','\t']){try{const rs=csvRows(text,d);if(!rs.length)continue;const n=rs[0].length;const same=rs.slice(1,21).filter(r=>r.length===n).length;const score=n>1?same*10+n:-100;if(score>best){best=score;delimiter=d}}catch{}}if(delimiter==='auto')delimiter=','}
- const rows=csvRows(text,delimiter);if(rows.length<2)fail('CSV benötigt eine Kopfzeile und mindestens eine Datenzeile.');const headers=rows.shift().map(s=>s.trim());if(headers.some(h=>!h))fail('CSV enthält einen leeren Spaltennamen.');if(new Set(headers).size!==headers.length)fail('CSV enthält doppelte Spaltennamen.');const data=rows.map((r,i)=>{if(r.length!==headers.length)fail('CSV-Datensatz '+(i+1)+': '+r.length+' statt '+headers.length+' Spalten.');return Object.fromEntries(headers.map((h,j)=>[h,r[j]]))});return{headers,data,delimiter};
+function scanCSV(input, delimiter, limit = Infinity) {
+  const text = input.replace(/^\uFEFF/, '');
+  const records = []; let values = [], value = '', quoted = false, closed = false;
+  let line = 1, startLine = 1, startIndex = 0, blankRecords = 0;
+  function finish(endIndex) {
+    values.push(value);
+    if (values.some(v => v !== '')) records.push({values, line: startLine, endLine: line, raw: text.slice(startIndex, endIndex)});
+    else blankRecords++;
+    values = []; value = ''; closed = false;
+  }
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"') { if (text[i + 1] === '"') { value += '"'; i++; } else { quoted = false; closed = true; } }
+      else { value += c; if (c === '\n' || c === '\r' && text[i + 1] !== '\n') line++; }
+      continue;
+    }
+    if (c === delimiter) { values.push(value); value = ''; closed = false; }
+    else if (c === '\n' || c === '\r') {
+      finish(i);
+      if (records.length >= limit) return {records, blankRecords};
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      line++; startLine = line; startIndex = i + 1;
+    } else if (c === '"') {
+      if (closed || value.trim() !== '') fail('CSV, Zeile ' + line + ': Anführungszeichen im ungeschützten Feld. Trennzeichen oder Anführungszeichen prüfen.');
+      value = ''; quoted = true;
+    } else if (closed) {
+      if (c !== ' ' && c !== '\t') fail('CSV, Zeile ' + line + ': Unerwartetes Zeichen nach einem geschlossenen Feld.');
+    } else value += c;
+  }
+  if (quoted) fail('CSV ab Zeile ' + startLine + ': Anführungszeichen nicht geschlossen. Datensatzgrenzen sind nicht sicher erkennbar.');
+  finish(text.length);
+  return {records, blankRecords};
 }
-const guess=(hs,names)=>hs.find(h=>names.includes(h.toLowerCase().replace(/[ _-]/g,'')))||'';
-function suggest(h){return{lon:guess(h,['longitude','lon','lng','long','x']),lat:guess(h,['latitude','lat','y']),alt:guess(h,['altitude','alt','elevation','height','z'])}}
-function fromCSV(csv,mapping=suggest(csv.headers)){const jsonGeom=csv.headers.includes('__geometry'),genericGeom=guess(csv.headers,['geometry','geometryjson','geojson']);if(!jsonGeom&&!genericGeom&&(!mapping.lon||!mapping.lat))fail('Keine Positionsspalten erkannt. Bitte Longitude und Latitude zuordnen. Schiffsstammdaten ohne Positionen lassen sich nicht in Geodaten umwandeln.');if(mapping.lon&&mapping.lon===mapping.lat&&!jsonGeom&&!genericGeom)fail('Longitude und Latitude müssen verschiedene Spalten sein.');
- const features=csv.data.map((r,i)=>{try{let g,p,id,extra={};if(jsonGeom||genericGeom){const raw=r[jsonGeom?'__geometry':genericGeom];if(!raw.trim())fail('Leere Geometriespalte.');g=JSON.parse(raw);if(g?.type==='Feature')fail('Die Geometriespalte muss ein Geometry-Objekt enthalten, kein Feature.')}else{const num=s=>{const v=String(s).trim();if(!/^[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?$/i.test(v))fail('Ungültige oder fehlende Koordinate: '+v);return Number(v.replace(',','.'))};g={type:'Point',coordinates:[num(r[mapping.lon]),num(r[mapping.lat])]};if(mapping.alt&&r[mapping.alt].trim())g.coordinates.push(num(r[mapping.alt]))}
- if(csv.headers.includes('__properties')){p=JSON.parse(r.__properties);if(p!==null&&!obj(p))fail('__properties muss ein JSON-Objekt oder null sein.')}else{p=Object.fromEntries(csv.headers.filter(h=>h!==(jsonGeom?'__geometry':genericGeom)).map(h=>[h,r[h]]))}
- if(csv.headers.includes('__id')&&r.__id!=='')id=JSON.parse(r.__id);if(csv.headers.includes('__feature_extra')&&r.__feature_extra!==''){extra=JSON.parse(r.__feature_extra);if(!obj(extra))fail('__feature_extra muss ein Objekt sein.')}
- return{...extra,type:'Feature',...(id!==undefined?{id}:{}),properties:p,geometry:g};}catch(e){fail('CSV-Datensatz '+(i+1)+': '+e.message)}});return collection({type:'FeatureCollection',features});
+function headerScore(records, index) {
+  const values = records[index].values, n = values.length;
+  if (n < 2) return -1000;
+  const terms = values.map(meaning);
+  const known = terms.filter(Boolean).length;
+  const following = records.slice(index + 1, index + 16);
+  const consistent = following.filter(r => r.values.length === n).length;
+  const textual = values.filter(s => /[a-zäöüß_]/i.test(s)).length / n;
+  return known * 12 + (terms.includes('lon') && terms.includes('lat') ? 40 : 0) + (terms.includes('geometry') ? 30 : 0) + consistent * 2 + textual * 8 - index * .3;
 }
-function toCSV(fc,d=';'){const keys=[...new Set(fc.features.flatMap(f=>Object.keys(f.properties||{})))];const labels=keys.map(k=>reserved.includes(k)||k.startsWith('property:')?'property:'+k:k);const headers=[...reserved,...labels];const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const display=v=>obj(v)||Array.isArray(v)?JSON.stringify(v):v===null?'':String(v??'');const rows=fc.features.map(f=>{const g=f.geometry,c=g?.type==='Point'?g.coordinates:[];const extra=Object.fromEntries(Object.entries(f).filter(([k])=>!['type','id','properties','geometry'].includes(k)));return[JSON.stringify(g),JSON.stringify(f.properties),'id'in f?JSON.stringify(f.id):'',Object.keys(extra).length?JSON.stringify(extra):'',...Array.from({length:3},(_,i)=>c[i]??''),g?.type||'null',...keys.map(k=>display(f.properties?.[k]))]});return'\uFEFF'+[headers,...rows].map(r=>r.map(cell).join(d)).join('\r\n')+'\r\n';}
+function readCSV(text, delimiter = 'auto', headerLine = 'auto') {
+  if (delimiter === 'auto') {
+    let best = -Infinity;
+    for (const d of [',', ';', '\t']) {
+      try {
+        const {records} = scanCSV(text, d, 80);
+        for (let i = 0; i < Math.min(records.length, 40); i++) {
+          const score = headerScore(records, i);
+          if (score > best) { best = score; delimiter = d; }
+        }
+      } catch {
+        // Infer the dialect from an intact header even when later quotes are broken.
+        try { const {records}=scanCSV(text,d,1); if(records.length){const score=headerScore(records,0);if(score>best){best=score;delimiter=d;}} } catch {}
+      }
+    }
+    if (delimiter === 'auto') delimiter = ',';
+  }
+  const {records, blankRecords} = scanCSV(text, delimiter);
+  if (records.length < 2) fail('CSV benötigt eine Kopfzeile und mindestens einen Datensatz. Trennzeichen prüfen.');
+  let headerIndex = -1;
+  if (headerLine !== 'auto' && String(headerLine).trim() !== '') {
+    headerIndex = records.findIndex(r => r.line === Number(headerLine));
+    if (headerIndex < 0) fail('Zeile ' + headerLine + ' ist kein Datensatzbeginn. Bei mehrzeiligen Feldern die erste Zeile des Datensatzes wählen.');
+  } else {
+    let best = -Infinity;
+    const convincing=records.slice(0,40).findIndex(r=>{const m=r.values.map(meaning);return m.includes('lon')&&m.includes('lat')||m.includes('geometry')});
+    for (let i = 0; i < Math.min(records.length - 1, 40); i++) {
+      const score = headerScore(records, i);
+      if (score > best) { best = score; headerIndex = i; }
+    }
+    if(convincing>=0)headerIndex=convincing;
+  }
+  if (headerIndex < 0) fail('Keine Kopfzeile erkannt. Kopfzeilen-Zeilennummer und Trennzeichen auswählen.');
+  const rawHeaders = records[headerIndex].values;
+  const used = new Set(), headerChanges = [];
+  const headers = rawHeaders.map((raw, i) => {
+    const clean = raw.normalize('NFKC').trim().replace(/\s+/g, ' ') || 'Spalte ' + (i + 1);
+    let key = clean, suffix = 2;
+    while (used.has(key.toLowerCase())) key = clean + ' [' + suffix++ + ']';
+    used.add(key.toLowerCase());
+    if (key !== raw) headerChanges.push({column: i + 1, original: raw, used: key});
+    return key;
+  });
+  const sourceRecords = records.slice(headerIndex + 1);
+  if (!sourceRecords.length) fail('Nach der Kopfzeile folgen keine Daten.');
+  const repeated = values => values.length === rawHeaders.length && values.length > 1 && values.every((v, i) => {
+    const a = normalHeader(v), b = normalHeader(rawHeaders[i]);
+    return a === b || !!meaning(v) && meaning(v) === meaning(rawHeaders[i]);
+  });
+  const rows = sourceRecords.map(r => ({...r, repeated: repeated(r.values), fields: Object.fromEntries(headers.map((h, i) => [h, r.values[i] ?? '']))}));
+  return {headers, rawHeaders, rows, data: rows.map(r => r.fields), delimiter, headerLine: records[headerIndex].line,
+    preamble: records.slice(0, headerIndex).map(r => ({line: r.line, values: r.values})), headerChanges, blankRecords};
+}
+function coordinate(value) {
+  const s = String(value ?? '').trim();
+  if (!/^[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?$/i.test(s)) fail('Ungültige oder fehlende Koordinate: „' + s + '“.');
+  const n = Number(s.replace(',', '.'));
+  if (!Number.isFinite(n)) fail('Koordinate ist keine endliche Zahl.');
+  return n;
+}
+const displayValue = v => obj(v) || Array.isArray(v) ? JSON.stringify(v) : v == null ? '' : String(v);
+const propertyLabel = key => reserved.includes(key) || key.startsWith('property:') ? 'property:' + key : key;
+function editedValue(text, original) {
+  if (text === displayValue(original)) return original;
+  if (typeof original === 'number' && text.trim() !== '' && Number.isFinite(Number(text))) return Number(text);
+  if (typeof original === 'boolean' && ['true', 'false'].includes(text)) return text === 'true';
+  if (obj(original) || Array.isArray(original)) { try { return JSON.parse(text); } catch { fail('Bearbeitetes verschachteltes Attribut enthält ungültiges JSON.'); } }
+  return text;
+}
+function shipProperties(properties, selected = '') {
+  if (properties === null) return null;
+  const keys=Object.keys(properties);
+  const candidates=keys.filter(k=>k===selected || aliases.ship.includes(normalHeader(k)));
+  if(!candidates.length)return properties;
+  const ordered=[...(selected&&candidates.includes(selected)?[selected]:[]),...candidates.filter(k=>k!==selected)];
+  const used=new Set(keys.filter(k=>!candidates.includes(k))), names=new Map();
+  for(const key of ordered){let name='Schiffsnummer',n=2;while(used.has(name))name='Schiffsnummer ['+n+++']';used.add(name);names.set(key,name)}
+  return Object.fromEntries(Object.entries(properties).map(([k,v])=>[names.get(k)||k,names.has(k)&&v!=null?String(v):v]));
+}
+function analyzeCSV(csv, options = {}) {
+  const mapping = options.mapping || suggest(csv.headers), policy = options.policy || 'ask', mode = options.mode || 'strict';
+  const report = {version: 2, inputRecords: csv.rows.length, headerLine: csv.headerLine, delimiter: csv.delimiter,
+    preamble: csv.preamble, headerChanges: csv.headerChanges, blankRecords: csv.blankRecords,
+    validRecords: 0, importedRecords: 0, excludedRecords: 0, skippedHeaders: 0, modifiedRecords: 0,
+    invalidRecords: 0, conflictRecords: 0, issues: [], mapping, mode, policy};
+  const features = [], modified = new Set();
+  const issue = (row, severity, code, message, details) => report.issues.push({line: row?.line ?? null, endLine: row?.endLine ?? null,
+    severity, code, message, ...(row ? {values: row.values} : {}), ...(details ? {details} : {})});
+  const canonicalGeometry = csv.headers.includes('__geometry');
+  const genericGeometry = csv.headers.find(h => aliases.geometry.includes(normalHeader(h))) || '';
+  const geomKey = canonicalGeometry ? '__geometry' : genericGeometry;
+  const hasProps = csv.headers.includes('__properties');
+  const mappingError = !geomKey && (!mapping.lon || !mapping.lat) ? 'Longitude und Latitude zuordnen. Schiffsstammdaten ohne Position oder Geometrie können nicht umgewandelt werden.'
+    : !geomKey && mapping.lon === mapping.lat ? 'Longitude und Latitude müssen verschiedene Spalten sein.' : '';
+  if (mappingError) issue(null, 'error', 'mapping', mappingError);
+  for (const key of ['lon', 'lat', 'alt', 'ship']) {
+    const candidates = csv.headers.filter(h => aliases[key].includes(normalHeader(h)));
+    if (candidates.length > 1) issue(null, 'warning', 'ambiguous-header', 'Mehrere mögliche Spalten für ' + ({lon:'Longitude',lat:'Latitude',alt:'Höhe',ship:'Schiffsnummer'}[key]) + ': ' + candidates.join(', ') + '. Zuordnung prüfen.');
+  }
+  if(!csv.rawHeaders.some(h=>meaning(h)))issue(null,'warning','weak-header','Kopfzeile nicht sicher erkennbar. Gewählte Kopfzeile und Originalzeilen prüfen; Dateien ohne Header benötigen eine Kopfzeile.');
+  if (csv.headerChanges.length) issue(null, 'warning', 'renamed-headers', 'Leere, doppelte oder abweichend geschriebene Header wurden eindeutig benannt.', csv.headerChanges);
+  if (csv.preamble.length) issue(null, 'info', 'preamble', csv.preamble.length + ' Datensätze vor der Kopfzeile werden als Vorspann behandelt. Kopfzeile prüfen.');
+  if (mappingError) return {fc: null, preview: null, report, ok: false};
+  for (const row of csv.rows) {
+    if (row.repeated) {
+      if (options.skipHeaders) { report.skippedHeaders++; issue(row, 'info', 'skipped-header', 'Wiederholte Kopfzeile wie ausgewählt übersprungen.'); }
+      else { report.invalidRecords++; issue(row, 'error', 'repeated-header', 'Wiederholte Kopfzeile im Datenblock. Überspringen ausdrücklich auswählen.'); }
+      continue;
+    }
+    if (row.values.length !== csv.headers.length) {
+      report.invalidRecords++; issue(row, 'error', 'column-count', row.values.length + ' statt ' + csv.headers.length + ' Felder. Fehlendes/zusätzliches Trennzeichen oder ungeschütztes Komma möglich. Keine automatische Verschiebung.');
+      continue;
+    }
+    const r = row.fields;
+    try {
+      let geometry, props, id, extra = {}, rowConflicts = [];
+      if (geomKey) {
+        if (!r[geomKey].trim()) fail('Geometriespalte ist leer.');
+        geometry = JSON.parse(r[geomKey]);
+        if (geometry?.type === 'Feature') fail('Die Geometriespalte benötigt ein Geometry-Objekt, kein Feature.');
+      } else {
+        geometry = {type: 'Point', coordinates: [coordinate(r[mapping.lon]), coordinate(r[mapping.lat])]};
+        if (mapping.alt && r[mapping.alt].trim() !== '') geometry.coordinates.push(coordinate(r[mapping.alt]));
+      }
+      validateGeometry(geometry);
+      if (hasProps) {
+        props = JSON.parse(r.__properties);
+        if (props !== null && !obj(props)) fail('__properties muss ein JSON-Objekt oder null sein.');
+        let tabular = props === null ? null : Object.fromEntries(Object.entries(props));
+        const knownLabels = new Set();
+        for (const [key, value] of Object.entries(props || {})) {
+          const label = propertyLabel(key); knownLabels.add(label);
+          if (csv.headers.includes(label) && r[label] !== displayValue(value)) {
+            rowConflicts.push({field: key, original: value, table: r[label]});
+            if (policy === 'table') tabular[key] = editedValue(r[label], value);
+          }
+        }
+        for (const h of csv.headers) if (!reserved.includes(h) && h !== geomKey && !knownLabels.has(h)) {
+          rowConflicts.push({field: h, original: '(nicht vorhanden)', table: r[h]});
+          if (policy === 'table') { if (tabular === null) tabular = {}; Object.defineProperty(tabular, h, {value:r[h],enumerable:true,writable:true,configurable:true}); }
+        }
+        if (policy === 'table') props = tabular;
+      } else props = Object.fromEntries(csv.headers.filter(h => h !== geomKey && !['__id','__feature_extra'].includes(h)).map(h => [h, r[h]]));
+      // In exchange CSVs readable point coordinates are redundant, so detect edits explicitly.
+      if (geomKey && mapping.lon && mapping.lat) {
+        if (geometry?.type === 'Point') {
+          let c=null;
+          try { c=[coordinate(r[mapping.lon]),coordinate(r[mapping.lat])];if(mapping.alt&&r[mapping.alt].trim()!=='')c.push(coordinate(r[mapping.alt])); }
+          catch(e){rowConflicts.push({field:'Koordinaten',original:geometry.coordinates,table:[r[mapping.lon],r[mapping.lat],...(mapping.alt?[r[mapping.alt]]:[])]});if(policy==='table')throw e;}
+          if (c && JSON.stringify(c) !== JSON.stringify(geometry.coordinates)) {
+            rowConflicts.push({field: 'Koordinaten', original: geometry.coordinates, table: c});
+            if (policy === 'table') geometry = {...geometry, coordinates: c};
+          }
+        } else if (r[mapping.lon].trim() || r[mapping.lat].trim() || mapping.alt && r[mapping.alt].trim()) {
+          rowConflicts.push({field: 'Koordinaten', original: geometry?.type || 'Ohne Geometrie', table: [r[mapping.lon], r[mapping.lat]]});
+          if (policy === 'table') fail('Linien, Flächen oder leere Geometrien können nicht über einzelne Positionsspalten geändert werden. __geometry bearbeiten oder JSON-Spalten wählen.');
+        }
+      }
+      if (rowConflicts.length) {
+        report.conflictRecords++;
+        issue(row, policy === 'ask' ? 'conflict' : 'info', 'csv-conflict', policy === 'ask' ? 'Sichtbare Tabellenwerte und JSON-Spalten widersprechen sich. Datenquelle auswählen.' : 'Widerspruch gemäß Auswahl aufgelöst: ' + (policy === 'table' ? 'Tabellenspalten' : 'JSON-Spalten') + '.', rowConflicts);
+        if (policy === 'table') modified.add(row.line);
+      }
+      const shipKey = mapping.ship && Object.hasOwn(props || {}, mapping.ship) ? mapping.ship : '';
+      const normalized = shipProperties(props, shipKey);
+      if (JSON.stringify(normalized) !== JSON.stringify(props)) modified.add(row.line);
+      props = normalized;
+      if (csv.headers.includes('__id') && r.__id !== '') id = JSON.parse(r.__id);
+      if (csv.headers.includes('__feature_extra') && r.__feature_extra !== '') { extra = JSON.parse(r.__feature_extra); if (!obj(extra)) fail('__feature_extra muss ein JSON-Objekt sein.'); }
+      const f = {...extra, type: 'Feature', ...(id !== undefined ? {id} : {}), properties: props, geometry};
+      collection({type:'FeatureCollection',features:[f]});
+      // Semantic hints: neither inferred identities nor speculative repairs.
+      if (mapping.mmsi && r[mapping.mmsi].trim() && !/^\d{9}$/.test(r[mapping.mmsi].trim())) issue(row, 'warning', 'mmsi-shape', 'MMSI hat nicht neun Ziffern. Mögliche Spaltenverschiebung oder bereits veränderte Kennung; Originalwert bleibt erhalten.');
+      if (mapping.time && r[mapping.time].trim()) {
+        const t = r[mapping.time].trim();
+        if (!Number.isFinite(Date.parse(t))) issue(row, 'warning', 'time-format', 'Zeitangabe nicht eindeutig lesbar. Spaltenzuordnung prüfen; Originalwert bleibt erhalten.');
+        else if (!/(Z|[+-]\d{2}:?\d{2})$/i.test(t)) issue(row, 'warning', 'time-zone', 'Zeitangabe ohne eindeutige Zeitzone. Keine automatische UTC-Umrechnung.');
+      }
+      features.push(f); report.validRecords++;
+    } catch (e) { report.invalidRecords++; issue(row, 'error', 'invalid-row', e.message); }
+  }
+  report.modifiedRecords = modified.size;
+  report.excludedRecords = report.invalidRecords + report.skippedHeaders;
+  const blocked = policy === 'ask' && report.conflictRecords > 0 || mode === 'strict' && report.invalidRecords > 0;
+  const ok = !blocked && features.length > 0;
+  report.importedRecords = ok ? features.length : 0;
+  return {fc: ok ? collection({type:'FeatureCollection', features}) : null, preview: features.length ? {type:'FeatureCollection', features} : null, report, ok};
+}
+function fromCSV(csv, mapping = suggest(csv.headers), options = {}) {
+  const result = analyzeCSV(csv, {...options, mapping});
+  if (!result.ok) {
+    const problem = result.report.issues.find(x => ['error','conflict'].includes(x.severity));
+    fail((problem?.line ? 'CSV-Zeile ' + problem.line + ': ' : '') + (problem?.message || 'Keine gültigen Datensätze.'));
+  }
+  return result.fc;
+}
+function toCSV(fc, d = ';') {
+  const keys = [...new Set(fc.features.flatMap(f => Object.keys(f.properties || {})))];
+  const headers = [...reserved, ...keys.map(propertyLabel)];
+  const cell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const rows = fc.features.map(f => {
+    const g = f.geometry, c = g?.type === 'Point' ? g.coordinates : [];
+    const extra = Object.fromEntries(Object.entries(f).filter(([k]) => !['type','id','properties','geometry'].includes(k)));
+    return [JSON.stringify(g), JSON.stringify(f.properties), 'id' in f ? JSON.stringify(f.id) : '', Object.keys(extra).length ? JSON.stringify(extra) : '', ...Array.from({length:3}, (_,i) => c[i] ?? ''), g?.type || 'null', ...keys.map(k => displayValue(f.properties?.[k]))];
+  });
+  return '\uFEFF' + [headers, ...rows].map(r => r.map(cell).join(d)).join('\r\n') + '\r\n';
+}
+
 const children=(el,n)=>Array.from(el.children||[]).filter(c=>c.localName===n),first=(el,n)=>children(el,n)[0],txt=(el,n)=>first(el,n)?.textContent??'',desc=(el,n)=>Array.from(el.getElementsByTagNameNS('*',n));
 function fromKML(text){if(/<!DOCTYPE|<!ENTITY/i.test(text))fail('KML mit DTD/Entities wird nicht unterstützt.');const doc=new DOMParser().parseFromString(text,'application/xml');if(desc(doc,'parsererror').length||doc.documentElement.localName!=='kml')fail('Ungültige KML-Datei. Erwartet wird ein kml-Wurzelelement.');const warnings=[];if(desc(doc,'NetworkLink').length)warnings.push('NetworkLinks werden nicht geladen.');if(desc(doc,'GroundOverlay').length||desc(doc,'ScreenOverlay').length)warnings.push('Overlays werden nicht übernommen.');warnings.push('KML-Stile, Ansichten und Ordnerstruktur werden nicht rekonstruiert.');
  const coords=el=>{const t=txt(el,'coordinates').trim();if(!t)fail('KML-Geometrie ohne Koordinaten.');return t.split(/\s+/).map(s=>s.split(',').map(v=>{if(!v.trim())fail('Leere KML-Koordinate.');return Number(v)}))};
@@ -58,32 +318,156 @@ function typeShape(g){if(!g)return null;return{type:g.type,...(g.type==='Geometr
 function restoreGeometry(g,s){if(!g||!s)return g;if(s.type==='GeometryCollection'){if(g.type!=='GeometryCollection')fail('KML-Geometriestruktur widerspricht den Metadaten.');return{type:s.type,geometries:g.geometries.map((v,i)=>restoreGeometry(v,s.children[i]))}}if(['MultiPoint','MultiLineString','MultiPolygon'].includes(s.type)){if(g.type!=='GeometryCollection')fail('KML-Mehrfachgeometrie fehlt.');return{type:s.type,coordinates:g.geometries.map(x=>x.coordinates)}}return g}
 function toKML(fc){const tuple=c=>c.join(','),coords=cs=>cs.map(tuple).join(' ');function gxml(g){if(!g)return'';switch(g.type){case'Point':return'<Point><coordinates>'+tuple(g.coordinates)+'</coordinates></Point>';case'LineString':return'<LineString><coordinates>'+coords(g.coordinates)+'</coordinates></LineString>';case'Polygon':return'<Polygon>'+g.coordinates.map((r,i)=>'<'+(i?'inner':'outer')+'BoundaryIs><LinearRing><coordinates>'+coords(r)+'</coordinates></LinearRing></'+(i?'inner':'outer')+'BoundaryIs>').join('')+'</Polygon>';case'GeometryCollection':return'<MultiGeometry>'+g.geometries.map(gxml).join('')+'</MultiGeometry>';default:{const t={MultiPoint:'Point',MultiLineString:'LineString',MultiPolygon:'Polygon'}[g.type];if(!t)fail('Geometrie kann nicht in KML gespeichert werden.');return'<MultiGeometry>'+g.coordinates.map(c=>gxml({type:t,coordinates:c})).join('')+'</MultiGeometry>'}}}
  const validTime=s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(s)&&Number.isFinite(Date.parse(s));
- const marks=fc.features.map((f,i)=>{const p=f.properties||{},extra=Object.fromEntries(Object.entries(f).filter(([k])=>!['type','id','properties','geometry'].includes(k)));const saved={format:'mowlsint-feature-v1',properties:f.properties,...('id'in f?{id:f.id}:{}),extra,geometryType:typeShape(f.geometry)};const data=Object.entries(p).filter(([k])=>k!=='__mowlsint_feature_v1').map(([k,v])=>'<Data name="'+xml(k)+'"><value>'+xml(obj(v)||Array.isArray(v)?JSON.stringify(v):v)+'</value></Data>').join('');const name=p.name??p.NAME??p.Name??('Objekt '+(i+1));const timestamp=p.timestamp??p.time??(validTime(p.name)?p.name:undefined);return'<Placemark><name>'+xml(name)+'</name>'+('description'in p?'<description>'+xml(p.description)+'</description>':'')+(validTime(timestamp)?'<TimeStamp><when>'+xml(timestamp)+'</when></TimeStamp>':'')+'<ExtendedData>'+data+'<Data name="__mowlsint_feature_v1"><value>'+xml(JSON.stringify(saved))+'</value></Data></ExtendedData>'+gxml(f.geometry)+'</Placemark>'});return'<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>MOwlSINT Geo Converter</name>'+marks.join('\n')+'</Document></kml>';
+ const marks=fc.features.map((f,i)=>{const p=f.properties||{},extra=Object.fromEntries(Object.entries(f).filter(([k])=>!['type','id','properties','geometry'].includes(k)));const saved={format:'mowlsint-feature-v1',properties:f.properties,...('id'in f?{id:f.id}:{}),extra,geometryType:typeShape(f.geometry)};const data=Object.entries(p).filter(([k])=>k!=='__mowlsint_feature_v1').map(([k,v])=>'<Data name="'+xml(k)+'"><value>'+xml(obj(v)||Array.isArray(v)?JSON.stringify(v):v)+'</value></Data>').join('');const name=p.name??p.NAME??p.Name??Object.entries(p).find(([k])=>meaning(k)==='name')?.[1]??('Objekt '+(i+1));const timestamp=p.timestamp??p.time??(validTime(p.name)?p.name:undefined);return'<Placemark><name>'+xml(name)+'</name>'+('description'in p?'<description>'+xml(p.description)+'</description>':'')+(validTime(timestamp)?'<TimeStamp><when>'+xml(timestamp)+'</when></TimeStamp>':'')+'<ExtendedData>'+data+'<Data name="__mowlsint_feature_v1"><value>'+xml(JSON.stringify(saved))+'</value></Data></ExtendedData>'+gxml(f.geometry)+'</Placemark>'});return'<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>MOwlSINT Geo Converter</name>'+marks.join('\n')+'</Document></kml>';
 }
 function positions(g,out=[]){if(!g)return out;if(g.type==='GeometryCollection'){g.geometries.forEach(x=>positions(x,out));return out}const visit=c=>{if(typeof c[0]==='number')out.push(c);else c.forEach(visit)};visit(g.coordinates);return out}
-return{collection,readCSV,suggest,fromCSV,toCSV,fromKML,toKML,positions,validateGeometry};})();
-const $=id=>document.getElementById(id);let state={fc:null,csv:null,raw:'',source:'',fileName:'',bytes:0,format:'geojson',warnings:[]};
-function message(text,error=false){$('message').className=text?'notice'+(error?' error':''):'hidden';$('message').textContent=text}
-function number(n){return n.toLocaleString('de-DE')}
-function reset(){state.fc=null;state.csv=null;state.raw='';state.warnings=[];$('file').value='';$('fileSummary').classList.add('hidden');$('mapping').classList.add('hidden');message('');render()}
-function populateMapping(csv){const map=Geo.suggest(csv.headers);for(const k of ['lon','lat','alt']){const s=$(k);s.replaceChildren(new Option(k==='alt'?'Keine':'Bitte wählen',''));csv.headers.forEach(h=>s.add(new Option(h,h)));s.value=map[k]||''}$('mapping').classList.remove('hidden');$('inputDelimiter').value='auto';$('mappingHint').textContent=csv.headers.includes('__geometry')?'Austausch-CSV erkannt. __geometry und __properties sind für den Import maßgeblich.':'Koordinaten in Dezimalgrad. Alle übrigen Spalten bleiben als Attribute erhalten.';return map}
-async function load(text,name='eingefuegte-daten',bytes){state.fc=null;state.csv=null;state.warnings=[];state.raw=text;state.fileName=name;state.bytes=bytes??new Blob([text]).size;message('');$('mapping').classList.add('hidden');$('fileSummary').classList.remove('hidden');$('fileName').textContent=name;$('outputName').value=name.replace(/\.(csv|kml|geojson|json)$/i,'')||'geodaten';
- try{const clean=text.replace(/^\uFEFF/,'').trim();if(!clean)throw Error('Die Datei ist leer.');if(clean.startsWith('<')){state.source='KML';const r=Geo.fromKML(clean);state.fc=r.fc;state.warnings=r.warnings}else if(clean.startsWith('{')||clean.startsWith('[')){state.source='GeoJSON';state.fc=Geo.collection(JSON.parse(clean))}else{state.source='CSV';state.csv=Geo.readCSV(text);const map=populateMapping(state.csv);state.fc=Geo.fromCSV(state.csv,map)}if(state.fc.features.some(f=>!f.geometry))state.warnings.push('Objekte ohne Geometrie werden mitgeführt.');message([...new Set(state.warnings)].join('\n'));}catch(e){message(e.message,true)}$('fileMeta').textContent=state.source+' · '+number(state.bytes)+' Bytes'+(state.csv?' · '+number(state.csv.data.length)+' Datensätze':'');render();}
-async function fileLoad(file){if(!file)return;if(file.size>30*1024*1024){reset();message('Datei zu groß. Maximal 30 MB pro Datei.',true);return}document.body.classList.add('busy');try{await load(await file.text(),file.name,file.size)}catch(e){message('Datei konnte nicht gelesen werden: '+e.message,true)}finally{document.body.classList.remove('busy')}}
+return{collection,readCSV,suggest,fromCSV,analyzeCSV,toCSV,fromKML,toKML,positions,validateGeometry,shipProperties,normalHeader};})();
+
+const $ = id => document.getElementById(id);
+let state = {fc:null,csv:null,raw:'',source:'',fileName:'',bytes:0,format:'geojson',warnings:[],report:null,approved:false,fileBytes:null};
+let importRevision = 0;
+function message(text, error = false) { $('message').className = text ? 'notice' + (error ? ' error' : '') : 'hidden'; $('message').textContent = text; }
+function number(n) { return n.toLocaleString('de-DE'); }
+function setBusy(on) { $('file').disabled=on; $('pasteLoad').disabled=on; $('demo').disabled=on; $('download').disabled=on || !state.approved || !state.fc; }
+function reset() {
+  importRevision++; state={...state,fc:null,csv:null,raw:'',source:'',fileName:'',bytes:0,warnings:[],report:null,approved:false,fileBytes:null};
+  $('file').value=''; $('fileSummary').classList.add('hidden'); $('mapping').classList.add('hidden'); $('encodingOptions').classList.add('hidden'); $('review').classList.add('hidden');
+  $('inputDelimiter').value='auto'; $('headerLine').value=''; $('csvPolicy').value='ask'; $('importMode').value='strict'; $('skipHeaders').checked=false; message(''); render();setBusy(false);
+}
+function mappingValue() { return Object.fromEntries(['lon','lat','alt','ship','name','mmsi','time'].map(k=>[k,$(k).value])); }
+function populateMapping(csv, previous = null) {
+  const map = previous || Geo.suggest(csv.headers);
+  for (const key of ['lon','lat','alt','ship','name','mmsi','time']) {
+    const select=$(key); select.replaceChildren(new Option(['lon','lat'].includes(key)?'Bitte wählen':'Keine Zuordnung',''));
+    csv.headers.forEach(h=>select.add(new Option(h,h))); select.value=csv.headers.includes(map[key])?map[key]:'';
+  }
+  $('mapping').classList.remove('hidden');
+  $('mappingHint').textContent='Zuordnung und Beispielzeilen prüfen. Schiffsnummer bleibt Text; keine Unterscheidung zwischen IMO und ENI.';
+  $('headerDetected').textContent='Erkannte Kopfzeile: Zeile '+csv.headerLine+' · Trennzeichen: '+({';':'Semikolon',',':'Komma','\t':'Tabulator'}[csv.delimiter]||csv.delimiter);
+}
+function csvOptions() { return {mapping:mappingValue(),policy:$('csvPolicy').value,mode:$('importMode').value,skipHeaders:$('skipHeaders').checked}; }
+function inspectCSV(approve = false) {
+  if(!state.csv)return;
+  const result=Geo.analyzeCSV(state.csv,csvOptions()); state.report=result.report; state.fc=result.fc;
+  state.approved=approve && result.ok;state.report.importedRecords=state.approved?result.report.validRecords:0;
+  if(!result.ok) {
+    const first=result.report.issues.find(i=>['error','conflict'].includes(i.severity));
+    message(first?(first.line?'Zeile '+first.line+': ':'')+first.message:'Keine gültigen Datensätze.',true);
+  } else message(approve?'Import bestätigt. '+number(result.report.importedRecords)+' Datensätze übernommen.':'Importprüfung bereit. Zuordnung prüfen und unten bestätigen.');
+  showReview(); render();
+}
+function reparseCSV() {
+  state.approved=false;state.fc=null;
+  try {
+    const previous=state.csv?mappingValue():null;
+    state.csv=Geo.readCSV(state.raw,$('inputDelimiter').value,$('headerLine').value.trim()||'auto');
+    populateMapping(state.csv,previous);inspectCSV(false);
+  } catch(e) {state.csv=null;state.report=null;message(e.message,true);showReview();render();}
+}
+function showReview() {
+  const panel=$('review'), report=state.report;
+  if(!report){panel.classList.add('hidden');return;}
+  panel.classList.remove('hidden');
+  const warnings=report.issues.filter(x=>x.severity==='warning').length;
+  $('reviewSummary').textContent='Eingelesen: '+number(report.inputRecords)+' · Gültig: '+number(report.validRecords)+' · Ausgeschlossen: '+number(report.excludedRecords)+' · Verändert: '+number(report.modifiedRecords)+' · Hinweise: '+number(warnings);
+  $('reportDownload').disabled=false;
+  $('bounds').textContent=boundsText(state.fc);
+  const changes=$('reviewChanges'); changes.replaceChildren();
+  const facts=[];
+  if(report.preamble?.length){facts.push('Vorspann vor der Kopfzeile: '+report.preamble.length+' Datensätze.');for(const r of report.preamble.slice(0,8))facts.push('Vorspann Zeile '+r.line+': '+JSON.stringify(r.values));}
+  for(const h of report.headerChanges||[])facts.push('Header '+h.column+': „'+h.original+'“ → „'+h.used+'“.');
+  if(report.mapping?.ship)facts.push('Spalte „'+report.mapping.ship+'“ → „Schiffsnummer“; Werte bleiben Text.');
+  if(report.skippedHeaders)facts.push(report.skippedHeaders+' wiederholte Kopfzeilen wie ausgewählt übersprungen.');
+  facts.slice(0,30).forEach(f=>{const p=document.createElement('p');p.textContent=f;changes.append(p);});
+  const sample=$('sourceSample');sample.replaceChildren();
+  if(state.csv){const t=document.createElement('table'),h=document.createElement('tr');['Quellzeile',...state.csv.headers].forEach(x=>{const c=document.createElement('th');c.textContent=x;h.append(c)});t.append(h);for(const r of state.csv.rows.slice(0,6)){const tr=document.createElement('tr');[r.line,...r.values].forEach(x=>{const td=document.createElement('td');td.textContent=String(x);td.title=String(x);tr.append(td)});t.append(tr)}sample.append(t)}
+  const wrap=$('issues');wrap.replaceChildren();
+  if(!report.issues.length){wrap.textContent='Keine strukturellen Fehler erkannt. Spaltenzuordnung und Lage der Positionen trotzdem prüfen.';return;}
+  const table=document.createElement('table'),thead=document.createElement('thead'),body=document.createElement('tbody'),head=document.createElement('tr');
+  ['Zeile','Status','Befund / Vorher → Nachher','Originalfelder'].forEach(h=>{const th=document.createElement('th');th.textContent=h;head.append(th)});thead.append(head);
+  for(const issue of report.issues.slice(0,100)) {
+    const tr=document.createElement('tr');
+    const detail=issue.code==='csv-conflict'?(issue.details||[]).map(d=>d.field+': '+JSON.stringify(d.original)+' → '+JSON.stringify(d.table)).join('\n'):'';
+    const cells=[issue.line===null?'Datei':issue.line+(issue.endLine!==issue.line?'–'+issue.endLine:''),{error:'Fehler',warning:'Prüfen',conflict:'Konflikt',info:'Info'}[issue.severity],issue.message+(detail?'\n'+detail:''),issue.values?JSON.stringify(issue.values):''];
+    for(const v of cells){const td=document.createElement('td');td.textContent=String(v);tr.append(td)}body.append(tr);
+  }
+  table.append(thead,body);wrap.append(table);
+  if(report.issues.length>100){const p=document.createElement('p');p.textContent='Erste 100 Befunde. Der Prüfbericht enthält alle '+number(report.issues.length)+' Befunde.';wrap.append(p)}
+}
+function boundsText(fc) {
+  if(!fc)return'Positionsbereich erscheint nach einer gültigen Zuordnung. Vertauschte Achsen lassen sich nicht immer rechnerisch erkennen.';
+  let minLon=Infinity,maxLon=-Infinity,minLat=Infinity,maxLat=-Infinity,count=0;
+  for(const f of fc.features)for(const p of Geo.positions(f.geometry)){minLon=Math.min(minLon,p[0]);maxLon=Math.max(maxLon,p[0]);minLat=Math.min(minLat,p[1]);maxLat=Math.max(maxLat,p[1]);count++}
+  return count?'Positionsbereich: Longitude '+minLon.toFixed(5)+'° bis '+maxLon.toFixed(5)+'° · Latitude '+minLat.toFixed(5)+'° bis '+maxLat.toFixed(5)+'°. Bitte Lage prüfen.':'Objekte ohne Positionen.';
+}
+function normalizeShips(fc) { let changed=0;const features=fc.features.map(f=>{const p=Geo.shipProperties(f.properties);if(JSON.stringify(p)!==JSON.stringify(f.properties))changed++;return {...f,properties:p}});return {fc:{...fc,features},changed}; }
+async function load(text,name='eingefuegte-daten',bytes,keepBytes=false) {
+  if(!keepBytes){state.fileBytes=null;$('encodingOptions').classList.add('hidden');}
+  state.fc=null;state.csv=null;state.report=null;state.approved=false;state.warnings=[];state.raw=text;state.fileName=name;state.bytes=bytes??new Blob([text]).size;state.source='';
+  $('inputDelimiter').value='auto';$('headerLine').value='';$('csvPolicy').value='ask';$('importMode').value='strict';$('skipHeaders').checked=false;
+  message('');$('mapping').classList.add('hidden');$('review').classList.add('hidden');$('fileSummary').classList.remove('hidden');$('fileName').textContent=name;
+  $('outputName').value=name.replace(/\.(csv|kml|geojson|json)$/i,'')||'geodaten';
+  try {
+    const clean=text.replace(/^\uFEFF/,'').trim();if(!clean)throw Error('Die Datei ist leer.');
+    if(clean.includes('\uFFFD'))state.warnings.push('Ersatzzeichen im Text erkannt. Zeichenkodierung prüfen.');
+    if(clean.startsWith('<')){state.source='KML';const r=Geo.fromKML(clean);state.fc=r.fc;state.warnings.push(...r.warnings)}
+    else if(clean.startsWith('{')||clean.startsWith('[')){state.source='GeoJSON';state.fc=Geo.collection(JSON.parse(clean))}
+    else {
+      state.source='CSV';$('mapping').classList.remove('hidden');
+      state.csv=Geo.readCSV(text);populateMapping(state.csv);inspectCSV(false);
+    }
+    if(state.fc&&state.source!=='CSV') {
+      const normalized=normalizeShips(state.fc);state.fc=normalized.fc;state.approved=true;
+      if(normalized.changed)state.warnings.push('Kennungsfelder bei '+number(normalized.changed)+' Objekten als „Schiffsnummer“ übernommen. Keine Kennungstyp-Prüfung.');
+      if(state.fc.features.some(f=>!f.geometry))state.warnings.push('Objekte ohne Geometrie werden mitgeführt.');
+      state.report={version:2,inputRecords:state.fc.features.length,validRecords:state.fc.features.length,importedRecords:state.fc.features.length,excludedRecords:0,modifiedRecords:normalized.changed,skippedHeaders:0,invalidRecords:0,conflictRecords:0,issues:state.warnings.map(message=>({line:null,endLine:null,severity:'info',code:'format-note',message}))};
+      message([...new Set(state.warnings)].join('\n'));showReview();
+    }
+  }catch(e){message(e.message,true);if(state.source==='CSV')$('mapping').classList.remove('hidden')}
+  $('fileMeta').textContent=(state.source||'Datei')+' · '+number(state.bytes)+' Bytes'+(state.csv?' · '+number(state.csv.rows.length)+' Datensätze':'');render();
+}
+function decodeBytes(bytes,encoding) {
+  const view=new Uint8Array(bytes);let name=encoding;
+  if(name==='auto')name=view[0]===0xff&&view[1]===0xfe?'utf-16le':view[0]===0xfe&&view[1]===0xff?'utf-16be':'utf-8';
+  try{return new TextDecoder(name,{fatal:name==='utf-8'}).decode(bytes)}catch{throw Error('Die Datei lässt sich nicht als UTF-8 lesen. Zeichenkodierung auswählen, z. B. Windows-1252 für ältere Excel-Exporte.');}
+}
+async function fileLoad(file) {
+  if(!file)return;if(file.size>30*1024*1024){reset();message('Datei zu groß. Maximal 30 MB pro Datei.',true);return}
+  const rev=++importRevision;setBusy(true);
+  try{
+    const bytes=await file.arrayBuffer();if(rev!==importRevision)return;
+    state.fileBytes=bytes;state.fileName=file.name;state.bytes=file.size;$('fileSummary').classList.remove('hidden');$('fileName').textContent=file.name;$('fileMeta').textContent=number(file.size)+' Bytes';$('encodingOptions').classList.remove('hidden');
+    const text=decodeBytes(bytes,$('encoding').value);await load(text,file.name,file.size,true);
+  }catch(e){state.fc=null;state.csv=null;state.report=null;state.approved=false;$('mapping').classList.add('hidden');message(e.message,true);showReview();render()}
+  finally{if(rev===importRevision)setBusy(false)}
+}
 function setFormat(fmt){state.format=fmt;document.querySelectorAll('[data-format]').forEach(b=>{b.classList.toggle('active',b.dataset.format===fmt);b.setAttribute('aria-pressed',String(b.dataset.format===fmt))});$('csvOptions').classList.toggle('hidden',fmt!=='csv');$('formatDescription').textContent={geojson:'Standardformat für Geodaten. Geometrien und Attribute in einer FeatureCollection.',csv:'Eine Zeile pro Objekt. Koordinaten, Attribute und JSON-Spalten für den vollständigen Rückimport.',kml:'Geometrien und Attribute für Google Earth und GIS. Ohne Rekonstruktion von KML-Stilen.'}[fmt];$('downloadLabel').textContent={geojson:'GeoJSON',csv:'CSV',kml:'KML'}[fmt]+' herunterladen'}
-function exportText(){if(!state.fc)throw Error('Zuerst gültige Geodaten importieren.');return state.format==='csv'?Geo.toCSV(state.fc,$('outputDelimiter').value):state.format==='kml'?Geo.toKML(state.fc):JSON.stringify(state.fc,null,2)}
+function exportText(){if(!state.fc||!state.approved)throw Error('Zuerst Import prüfen und bestätigen.');return state.format==='csv'?Geo.toCSV(state.fc,$('outputDelimiter').value):state.format==='kml'?Geo.toKML(state.fc):JSON.stringify(state.fc,null,2)}
 function save(text,name,mime){const url=URL.createObjectURL(new Blob([text],{type:mime})),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000)}
+
 function tablePreview(){const wrap=document.createElement('div');wrap.className='table-wrap';const table=document.createElement('table'),head=document.createElement('thead'),tr=document.createElement('tr'),body=document.createElement('tbody');const fs=state.fc?.features;const keys=fs?[...new Set(fs.flatMap(f=>Object.keys(f.properties||{})))]:state.csv?.headers||[];const shown=keys.slice(0,24);const hs=fs?['#','Geometrie','Longitude','Latitude',...shown]:['#',...shown];for(const h of hs){const th=document.createElement('th');th.textContent=h;tr.append(th)}head.append(tr);(fs||state.csv.data).slice(0,100).forEach((f,i)=>{const row=document.createElement('tr');const c=fs&&f.geometry?.type==='Point'?f.geometry.coordinates:[];const vals=fs?[i+1,f.geometry?.type||'Ohne Geometrie',c[0]??'—',c[1]??'—',...shown.map(k=>f.properties?.[k])]:[i+1,...shown.map(k=>f[k])];for(const v of vals){const td=document.createElement('td');td.textContent=v===null?'null':typeof v==='object'?JSON.stringify(v):String(v??'');td.title=td.textContent;row.append(td)}body.append(row)});table.append(head,body);wrap.append(table);$('panel-table').replaceChildren(wrap);return keys}
 function render(){const fc=state.fc,fs=fc?.features;let all=[],types=[];if(fs){fs.forEach(f=>Geo.positions(f.geometry,all));types=[...new Set(fs.map(f=>f.geometry?.type||'Ohne Geometrie'))]}
- $('download').disabled=!fc;$('nFeatures').textContent=fs?number(fs.length):state.csv?number(state.csv.data.length):'—';$('nPoints').textContent=fs?number(all.length):'—';$('nTypes').textContent=types.length?types.map(t=>({Point:'Punkte',LineString:'Linien',Polygon:'Flächen',MultiPoint:'Multipunkte',MultiLineString:'Multilinien',MultiPolygon:'Multiflächen',GeometryCollection:'Sammlung'}[t]||t)).join(' · '):'—';$('nTypes').style.fontSize=types.length>2?'12px':'18px';let keys=[];if(fs||state.csv)keys=tablePreview();else $('panel-table').innerHTML='<div class="empty"><div><span aria-hidden="true">⌖</span>Deine Datenvorschau erscheint hier.<br><small>Importiere eine Datei oder lade das Beispiel.</small></div></div>';$('nFields').textContent=fs||state.csv?number(keys.length):'—';$('previewCount').textContent=fs||state.csv?number((fs||state.csv.data).length)+' Einträge · Vorschau: erste '+Math.min(100,(fs||state.csv.data).length)+' · '+Math.min(keys.length,24)+' Attributspalten':'Noch keine Daten geladen';$('exportFoot').textContent=fc?number(fs.length)+' Objekte · Vollständiger Datensatz':state.csv?'Koordinaten fehlen oder sind ungültig':'Zuerst eine Datei importieren';if(fc){const preview={type:'FeatureCollection',features:fs.slice(0,3)};let t=JSON.stringify(preview,null,2);if(t.length>35000)t=t.slice(0,35000)+'\n… Vorschau gekürzt';if(fs.length>3)t+='\n\n// Vorschau: 3 von '+fs.length+' Objekten; Export enthält alle.';$('panel-json').textContent=t}else $('panel-json').textContent='Keine gültigen Geodaten geladen.';drawGeometry(all);}
+ $('download').disabled=!fc||!state.approved;$('nFeatures').textContent=fs?number(fs.length):state.csv?number(state.csv.data.length):'—';$('nPoints').textContent=fs?number(all.length):'—';$('nTypes').textContent=types.length?types.map(t=>({Point:'Punkte',LineString:'Linien',Polygon:'Flächen',MultiPoint:'Multipunkte',MultiLineString:'Multilinien',MultiPolygon:'Multiflächen',GeometryCollection:'Sammlung'}[t]||t)).join(' · '):'—';$('nTypes').style.fontSize=types.length>2?'12px':'18px';let keys=[];if(fs||state.csv)keys=tablePreview();else $('panel-table').innerHTML='<div class="empty"><div><span aria-hidden="true">⌖</span>Deine Datenvorschau erscheint hier.<br><small>Importiere eine Datei oder lade das Beispiel.</small></div></div>';$('nFields').textContent=fs||state.csv?number(keys.length):'—';$('previewCount').textContent=fs||state.csv?number((fs||state.csv.data).length)+' Einträge · Vorschau: erste '+Math.min(100,(fs||state.csv.data).length)+' · '+Math.min(keys.length,24)+' Attributspalten':'Noch keine Daten geladen';$('exportFoot').textContent=fc?(state.approved?number(fs.length)+' Objekte · Vollständiger Datensatz':'Importprüfung bestätigen'):state.csv?'Zuordnung und Importprüfung prüfen':'Zuerst eine Datei importieren';if(fc){const preview={type:'FeatureCollection',features:fs.slice(0,3)};let t=JSON.stringify(preview,null,2);if(t.length>35000)t=t.slice(0,35000)+'\n… Vorschau gekürzt';if(fs.length>3)t+='\n\n// Vorschau: 3 von '+fs.length+' Objekten; Export enthält alle.';$('panel-json').textContent=t}else $('panel-json').textContent='Keine gültigen Geodaten geladen.';drawGeometry(all);}
 function drawGeometry(all){const panel=$('panel-geometry');panel.replaceChildren();if(!all.length){panel.innerHTML='<div class="empty">Keine Geometrie verfügbar.</div>';return}let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;for(const c of all){minX=Math.min(minX,c[0]);maxX=Math.max(maxX,c[0]);minY=Math.min(minY,c[1]);maxY=Math.max(maxY,c[1])}let dx=maxX-minX||.01,dy=maxY-minY||.01;const project=c=>[35+(c[0]-minX)/dx*930,235-(c[1]-minY)/dy*205],ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1000 285');svg.setAttribute('role','img');svg.setAttribute('aria-label','Schematische Geometrieansicht in Längen- und Breitengraden, ohne Basiskarte.');const elem=(n,attrs)=>{const e=document.createElementNS(ns,n);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));svg.append(e);return e};for(let i=0;i<=10;i++)elem('line',{x1:35+i*93,x2:35+i*93,y1:20,y2:245,stroke:'#e1e9e4','stroke-width':1});for(let i=0;i<=4;i++)elem('line',{x1:35,x2:965,y1:30+i*51,y2:30+i*51,stroke:'#e1e9e4'});let budget=12000;function draw(g){if(!g||budget<=0)return;const pts=cs=>{const sample=cs.slice(0,budget);budget-=sample.length;return sample.map(c=>project(c).join(',')).join(' ')};switch(g.type){case'Point':{budget--;const [cx,cy]=project(g.coordinates);elem('circle',{cx,cy,r:3.3,fill:'#0b8372',opacity:.65});break}case'MultiPoint':g.coordinates.forEach(c=>draw({type:'Point',coordinates:c}));break;case'LineString':elem('polyline',{points:pts(g.coordinates),fill:'none',stroke:'#08796e','stroke-width':2});break;case'Polygon':{const d=g.coordinates.map(r=>'M'+pts(r).replaceAll(' ',' L')+' Z').join(' ');elem('path',{d,fill:'#64ae8f','fill-opacity':.24,stroke:'#08796e','stroke-width':1.5,'fill-rule':'evenodd'});break}case'MultiLineString':g.coordinates.forEach(c=>draw({type:'LineString',coordinates:c}));break;case'MultiPolygon':g.coordinates.forEach(c=>draw({type:'Polygon',coordinates:c}));break;case'GeometryCollection':g.geometries.forEach(draw)}}state.fc.features.forEach(f=>draw(f.geometry));const label=elem('text',{x:35,y:267,fill:'#627b74','font-size':11,'font-family':'monospace'});label.textContent=minX.toFixed(4)+'° … '+maxX.toFixed(4)+'° LON  /  '+minY.toFixed(4)+'° … '+maxY.toFixed(4)+'° LAT';panel.append(svg);const note=document.createElement('div');note.className='geometry-note';note.style.bottom='2px';note.textContent='Schematisch · Achsen separat skaliert · Keine Basiskarte'+(all.length>12000?' · Auf 12.000 Positionen begrenzt':'');panel.append(note)}
-$('file').addEventListener('change',e=>fileLoad(e.target.files[0]));const drop=$('drop');['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));drop.addEventListener('drop',e=>{if(e.dataTransfer.files.length!==1){message('Bitte jeweils eine Datei importieren.',true);return}fileLoad(e.dataTransfer.files[0])});$('clear').onclick=reset;$('pasteToggle').onclick=()=>$('paste').classList.toggle('hidden');$('pasteLoad').onclick=()=>{if(new Blob([$('pasteText').value]).size>30*1024*1024){reset();message('Text zu groß. Maximal 30 MB.',true);return}load($('pasteText').value)};
-$('applyMapping').onclick=()=>{try{state.fc=Geo.fromCSV(state.csv,{lon:$('lon').value,lat:$('lat').value,alt:$('alt').value});message('CSV erfolgreich zugeordnet.')}catch(e){state.fc=null;message(e.message,true)}render()};$('inputDelimiter').onchange=()=>{try{const d=$('inputDelimiter').value;state.csv=Geo.readCSV(state.raw,d);populateMapping(state.csv);$('inputDelimiter').value=d;state.fc=null;message('Bitte die Spaltenzuordnung prüfen und anwenden.');render()}catch(e){state.fc=null;message(e.message,true);render()}};document.querySelectorAll('[data-format]').forEach(b=>b.onclick=()=>setFormat(b.dataset.format));
+
+$('file').addEventListener('change',e=>fileLoad(e.target.files[0]));
+const drop=$('drop');['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>{if(e.dataTransfer.files.length!==1){message('Bitte jeweils eine Datei importieren.',true);return}fileLoad(e.dataTransfer.files[0])});
+$('clear').onclick=reset;$('pasteToggle').onclick=()=>$('paste').classList.toggle('hidden');
+$('pasteLoad').onclick=()=>{if(new Blob([$('pasteText').value]).size>30*1024*1024){reset();message('Text zu groß. Maximal 30 MB.',true);return}importRevision++;load($('pasteText').value)};
+$('applyMapping').onclick=()=>inspectCSV(true);
+for(const key of ['lon','lat','alt','ship','name','mmsi','time','csvPolicy','importMode','skipHeaders'])$(key).addEventListener('change',()=>inspectCSV(false));
+$('inputDelimiter').onchange=reparseCSV;$('headerLine').onchange=reparseCSV;
+$('swapAxes').onclick=()=>{const before=$('lon').value;$('lon').value=$('lat').value;$('lat').value=before;inspectCSV(false)};
+$('encoding').onchange=async()=>{if(!state.fileBytes)return;try{await load(decodeBytes(state.fileBytes,$('encoding').value),state.fileName,state.bytes,true)}catch(e){state.fc=null;state.csv=null;state.report=null;state.approved=false;$('mapping').classList.add('hidden');message(e.message,true);showReview();render()}};
+document.querySelectorAll('[data-format]').forEach(b=>b.onclick=()=>setFormat(b.dataset.format));
 $('download').onclick=()=>{try{const base=$('outputName').value.trim().replace(/\.(kml|csv|geojson|json)$/i,'').replace(/[\\/:*?"<>|\x00-\x1f]/g,'_')||'geodaten';save(exportText(),base+'.'+state.format,{geojson:'application/geo+json;charset=utf-8',csv:'text/csv;charset=utf-8',kml:'application/vnd.google-earth.kml+xml;charset=utf-8'}[state.format])}catch(e){message(e.message,true)}};
+$('reportDownload').onclick=()=>{if(state.report)save(JSON.stringify({file:state.fileName,confirmed:state.approved,...state.report},null,2),'Geo_Converter_Pruefbericht.json','application/json;charset=utf-8')};
 const cleanOffline='<!doctype html>\n'+document.documentElement.outerHTML;
 $('offline').onclick=()=>save(cleanOffline,'MOwlSINT_Geo_Converter_Offline.html','text/html;charset=utf-8');
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(t=>{const on=t===b;t.classList.toggle('active',on);t.setAttribute('aria-selected',String(on));$('panel-'+t.dataset.tab).classList.toggle('hidden',!on)})});
-const demo={type:'FeatureCollection',features:[{type:'Feature',properties:{name:'NORTH STAR',MMSI:'211000001',timestamp:'2026-11-06T06:00:00Z',status:'Beispieldaten'},geometry:{type:'Point',coordinates:[7.95,54.12]}},{type:'Feature',properties:{name:'NORTH STAR · Track',MMSI:'211000001',status:'Synthetischer Beispieltrack'},geometry:{type:'LineString',coordinates:[[7.4,53.8],[7.6,53.91],[7.75,54.02],[7.95,54.12]]}},{type:'Feature',properties:{name:'Analysegebiet',status:'Synthetisches Beispielgebiet'},geometry:{type:'Polygon',coordinates:[[[7.7,54.05],[8.15,54.05],[8.15,54.3],[7.7,54.3],[7.7,54.05]]]}}]};$('demo').onclick=()=>load(JSON.stringify(demo),'beispiel-nordsee.geojson');setFormat('geojson');
+const demo={type:'FeatureCollection',features:[{type:'Feature',properties:{name:'NORTH STAR',MMSI:'211000001',Schiffsnummer:'9074729',timestamp:'2026-11-06T06:00:00Z',status:'Beispieldaten'},geometry:{type:'Point',coordinates:[7.95,54.12]}},{type:'Feature',properties:{name:'NORTH STAR · Track',MMSI:'211000001',status:'Synthetischer Beispieltrack'},geometry:{type:'LineString',coordinates:[[7.4,53.8],[7.6,53.91],[7.75,54.02],[7.95,54.12]]}},{type:'Feature',properties:{name:'Analysegebiet',status:'Synthetisches Beispielgebiet'},geometry:{type:'Polygon',coordinates:[[[7.7,54.05],[8.15,54.05],[8.15,54.3],[7.7,54.3],[7.7,54.05]]]}}]};
+$('demo').onclick=()=>{importRevision++;load(JSON.stringify(demo),'beispiel-nordsee.geojson')};setFormat('geojson');
 if(location.protocol==='file:')document.querySelectorAll('.portal-link').forEach(el=>el.hidden=true);
 window.GeoConverter={Geo,load,getState:()=>state,exportText};
 </script></body></html>
