@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10263d">
+<meta name="description" content="MOwlSINT QSL Card Studio – Empfangsberichte prüfen und Retro-QSL-Karten lokal als PDF ausstellen.">
+<title>QSL Card Studio · MOwlSINT TOOLZ</title>
+<style>
+:root {--navy:#10263d;--navy2:#213d55;--ivory:#f6f0e4;--paper:#fffcf3;--gold:#a9894c;--ink:#192b3a;--muted:#5e6a72;--line:#cfc2a6;--error:#9a3e2c;--ok:#376a50}
+*{box-sizing:border-box}
+html{background:var(--ivory)}
+body{margin:0;color:var(--ink);background:var(--ivory);font:15px/1.48 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:#28526c}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+header{background:var(--navy);color:var(--ivory);border-bottom:3px solid var(--gold)}
+.top{width:min(1140px,100%);padding:16px 26px;min-height:78px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{text-decoration:none;color:inherit;letter-spacing:.07em;font-size:21px;font-weight:800}
+.brand b{color:#dcc28a}
+.top small{font-size:12px;color:#ead5a5}
+.wrap{width:min(1140px,100%);margin:0 auto;padding:30px 26px 64px}
+.eyebrow{text-transform:uppercase;color:#92723d;letter-spacing:.2em;font-size:12px;font-weight:800}
+h1{margin:3px 0 10px;color:var(--navy);font:700 clamp(29px,5vw,44px)/1.13 Georgia,serif}
+.intro{max-width:74ch;color:#506071;margin:0 0 23px}
+.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.85fr);gap:22px;align-items:start}
+.panel{background:var(--paper);border:1px solid var(--line);box-shadow:0 2px 0 rgba(13,30,43,.04);padding:22px;min-width:0}
+.panel h2{font-size:19px;margin:0 0 13px;color:var(--navy);font-weight:750}
+.panel h3{margin:20px 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:var(--navy)}
+.help{font-size:13px;color:var(--muted);margin:6px 0 12px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{min-width:0}.span2{grid-column:1/-1}
+label{display:block;font-weight:650;margin:0 0 5px;font-size:13px}
+small.optional{font-weight:400;color:var(--muted)}
+input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;font:inherit;color:var(--ink);border:1px solid #bdb49d;background:#fffefa;border-radius:3px;padding:10px;min-height:42px}
+textarea{resize:vertical;min-height:76px}
+input[type=file]{display:none}
+button,.button{font:700 14px/1.2 inherit;background:var(--navy);color:#fff;border:1px solid var(--navy);padding:12px 14px;cursor:pointer;border-radius:3px;display:inline-flex;justify-content:center;align-items:center;text-align:center;gap:6px;text-decoration:none}
+button.secondary,.button.secondary{background:transparent;color:var(--navy);border-color:var(--line)}
+button:hover,.button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.notice{background:#ece6d7;border-left:4px solid var(--gold);padding:12px 15px;font-size:13px}
+.notice.error{background:#f7e8e2;border-left-color:var(--error);color:#782b20}
+.notice.ok{background:#e3eee7;border-left-color:var(--ok);color:#224e39}
+.check{display:flex;gap:9px;align-items:flex-start;margin:16px 0 10px;font-weight:650;font-size:13px}
+.check input{margin-top:4px;accent-color:var(--navy);width:17px;height:17px;flex:none}
+#status{margin-top:12px;min-height:45px}
+#preview{height:min(66vw,530px);min-height:240px;width:100%;border:1px solid var(--line);background:#ddd7c6;margin-top:12px}
+.placeholder{background:#eae1cf;border:1px dashed #b7a68a;display:grid;place-items:center;min-height:205px;padding:18px;text-align:center;color:#625948;font-family:Georgia,serif}
+.file-name{word-break:break-word;font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;background:#ece2cd;border-radius:2px}
+.fine{color:var(--muted);font-size:12px;line-height:1.55}
+footer{border-top:2px solid var(--gold);background:var(--navy);color:#d3c6a9;padding:19px 26px;font-size:12px;text-align:center}
+footer a{color:inherit}
+@media(max-width:860px){.layout{grid-template-columns:1fr}}
+@media(max-width:520px){.wrap{padding:22px 14px 46px}.panel{padding:16px}.top{padding:15px 14px}.top small{display:none}.fields{grid-template-columns:1fr}.span2{grid-column:auto}.actions>*{flex:1 1 auto}#preview{min-height:290px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+<header><div class="top"><a class="brand" href="../">MOwlSINT <b>TOOLZ</b></a><small>QSL CARD STUDIO · THE MONTHLY SIGNAL</small></div></header>
+<main class="wrap">
+<div class="eyebrow">Shortwave reception reports</div>
+<h1>QSL Card Studio</h1>
+<p class="intro">Empfangsberichte nach manueller Prüfung als personalisierte QSL-Karte ausstellen. Das handgezeichnete New-Orleans-Motiv deiner bestehenden PDF-Vorlage bleibt erhalten. Alles wird ausschließlich in deinem Browser verarbeitet.</p>
+<div class="layout">
+<section class="panel" aria-labelledby="data-heading">
+<h2 id="data-heading">01 · Empfangsdaten</h2>
+<div class="fields">
+<div class="field span2"><label for="Listener">Hörername *</label><input id="Listener" type="text" maxlength="120" required placeholder="Ernesto Castanha" autocomplete="off"></div>
+<div class="field"><label for="Date_UTC">Empfangsdatum (UTC) *</label><input id="Date_UTC" type="date" required></div>
+<div class="field"><label for="Time_UTC">Beginn (UTC) *</label><input id="Time_UTC" type="time" required></div>
+<div class="field"><label for="Frequency">Frequenz in kHz *</label><input id="Frequency" type="number" step="0.1" min="100" max="30000" value="6070" required></div>
+<div class="field"><label for="Band">Band</label><input id="Band" type="text" maxlength="40" value="49 m"></div>
+<div class="field span2"><label for="Program">Sendung *</label><input id="Program" type="text" maxlength="100" value="The Monthly Signal" required></div>
+<div class="field span2"><label for="Transmitter">Sender / Sendeanlage</label><input id="Transmitter" type="text" maxlength="100" value="Channel 292, Germany"></div>
+<div class="field span2"><label for="Location">Empfangsort *</label><input id="Location" type="text" maxlength="140" required placeholder="São Miguel Island, Azores"></div>
+<div class="field"><label for="SINPO">SINPO <small class="optional">(optional)</small></label><input id="SINPO" type="text" inputmode="numeric" maxlength="5" placeholder="45444"></div>
+<div class="field"><label for="Receiver">Empfänger</label><input id="Receiver" type="text" maxlength="100" placeholder="Yaesu FT-891"></div>
+<div class="field span2"><label for="Antenna">Antenne</label><input id="Antenna" type="text" maxlength="120" placeholder="Vertical, 34 m"></div>
+<div class="field span2"><label for="Remarks">Bemerkungen / Programminhalt</label><textarea id="Remarks" maxlength="360" placeholder="Kurze Angaben zur gehörten Sendung oder zur Empfangsqualität"></textarea></div>
+<div class="field"><label for="Verified_by">Bestätigt von</label><input id="Verified_by" type="text" maxlength="80" value="MOwlSINT Radio"></div>
+<div class="field"><label for="Signature">Signatur</label><input id="Signature" type="text" maxlength="90" value="73, MOwlSINT Radio"></div>
+</div>
+<label class="check"><input id="approved" type="checkbox"><span>Ich habe Datum, Uhrzeit, Frequenz und Programminhalt gegen den tatsächlichen Sendeplan geprüft und möchte diese Empfangsbestätigung ausstellen.</span></label>
+<p class="fine">Diese Bestätigung erfolgt bewusst manuell. Die Website kann keinen tatsächlichen Funkempfang beweisen. Ohne Freigabe wird keine QSL-Karte erzeugt.</p>
+<div class="actions"><button id="previewBtn" type="button">Vorschau erzeugen</button><button id="downloadBtn" type="button">QSL als PDF herunterladen</button><button id="resetBtn" type="button" class="secondary">Formular leeren</button></div>
+<div id="status" role="status" aria-live="polite"></div>
+</section>
+<aside class="panel" aria-labelledby="template-heading">
+<h2 id="template-heading">02 · Kartenmotiv</h2>
+<div id="templateStatus" class="notice">Die ausfüllbare Retro-QSL-Vorlage muss beim ersten Aufruf einmalig aus diesem Chat als PDF ausgewählt werden.</div>
+<p class="help">Die Originalgrafik bleibt vollständig erhalten. Das Studio füllt nur die 14 bereits vorhandenen PDF-Felder aus und kann sie für den Versand festschreiben.</p>
+<div class="actions">
+<label class="button secondary" for="templateFile" role="button" tabindex="0" id="uploadLabel">PDF-Vorlage auswählen</label>
+<input id="templateFile" type="file" accept="application/pdf,.pdf">
+<button type="button" class="secondary" id="forgetBtn">Vorlage entfernen</button>
+</div>
+<p id="templateName" class="file-name"></p>
+<label class="check"><input id="flatten" type="checkbox" checked><span>PDF-Felder für den Versand festschreiben (empfohlen)</span></label>
+<div class="pill">Lokale Verarbeitung · kein Upload</div>
+<div id="emptyPreview" class="placeholder">Nach dem Ausfüllen und der manuellen Prüfung erscheint hier deine QSL-Vorschau.</div>
+<iframe id="preview" title="PDF-Vorschau der ausgefüllten QSL-Karte" hidden></iframe>
+<p class="fine">Die PDF-Vorlage wird nach Möglichkeit nur auf diesem Gerät im Browser (IndexedDB) gespeichert. Hörerangaben werden nicht automatisch gespeichert. Das Studio versendet keine E-Mails.</p>
+</aside>
+</div>
+</main>
+<footer><a href="../">MOwlSINT TOOLZ</a> · QSL Card Studio · Broadcasting Maritime Intelligence</footer>
+<script>
+(function(){
+"use strict";
+var EXPECTED=["Date_UTC","Time_UTC","Frequency","Band","Program","Transmitter","Location","SINPO","Receiver","Antenna","Listener","Remarks","Verified_by","Signature"];
+var templateBytes=null,previewUrl=null,dbPromise=null;
+var el=function(id){return document.getElementById(id);};
+var status=function(message,kind){el("status").className="notice "+(kind||"");el("status").textContent=message;};
+var templateStatus=function(message,kind){el("templateStatus").className="notice "+(kind||"");el("templateStatus").textContent=message;};
+var value=function(name){return el(name).value.trim();};
+function openDB(){
+ if(!("indexedDB" in window))return Promise.reject(Error("IndexedDB nicht verfügbar"));
+ if(!dbPromise)dbPromise=new Promise(function(resolve,reject){
+  var r=indexedDB.open("mowlsint-qsl-studio",1);
+  r.onupgradeneeded=function(){if(!r.result.objectStoreNames.contains("templates"))r.result.createObjectStore("templates");};
+  r.onsuccess=function(){resolve(r.result);};
+  r.onerror=function(){reject(r.error||Error("Speicherung blockiert"));};
+ });
+ return dbPromise;
+}
+async function storeTemplate(buffer){
+ var db=await openDB();
+ await new Promise(function(resolve,reject){
+  var tx=db.transaction("templates","readwrite");
+  tx.objectStore("templates").put(buffer,"active");
+  tx.oncomplete=resolve;tx.onerror=function(){reject(tx.error||Error("Schreibfehler"));};
+ });
+}
+async function loadSaved(){
+ var db=await openDB();
+ return new Promise(function(resolve,reject){
+  var tx=db.transaction("templates","readonly");
+  var q=tx.objectStore("templates").get("active");
+  q.onsuccess=function(){resolve(q.result||null);};
+  q.onerror=function(){reject(q.error||Error("Lesefehler"));};
+ });
+}
+async function deleteSaved(){
+ var db=await openDB();
+ await new Promise(function(resolve,reject){
+  var tx=db.transaction("templates","readwrite");
+  tx.objectStore("templates").delete("active");
+  tx.oncomplete=resolve;tx.onerror=function(){reject(tx.error||Error("Löschfehler"));};
+ });
+}
+function requireLibrary(){if(!window.PDFLib)throw Error("Die PDF-Bibliothek konnte nicht geladen werden. Prüfe die Internetverbindung oder einen Script-Blocker.");}
+async function checkTemplate(bytes){
+ requireLibrary();
+ if(bytes.byteLength<1000||bytes.byteLength>20*1024*1024)throw Error("Die PDF-Vorlage muss zwischen 1 KB und 20 MB groß sein.");
+ var header=new TextDecoder("ascii").decode(new Uint8Array(bytes).slice(0,5));
+ if(header!=="%PDF-")throw Error("Diese Datei ist keine PDF.");
+ var pdf=await PDFLib.PDFDocument.load(bytes.slice(0));
+ if(pdf.getPageCount()!==1)throw Error("Die QSL-Vorlage muss genau eine Seite enthalten.");
+ var available=pdf.getForm().getFields().map(function(f){return f.getName();});
+ var missing=EXPECTED.filter(function(f){return !available.includes(f);});
+ if(missing.length)throw Error("Falsche PDF-Vorlage. Diese Formularfelder fehlen: "+missing.join(", "));
+}
+async function useTemplate(bytes,name,persist){
+ await checkTemplate(bytes);
+ templateBytes=bytes.slice(0);
+ el("templateName").textContent=name;
+ templateStatus("Die originale MOwlSINT-QSL-Vorlage ist geladen und einsatzbereit.","ok");
+ if(persist){try{await storeTemplate(bytes.slice(0));templateStatus("Vorlage geladen und auf diesem Gerät gespeichert.","ok");}
+ catch(err){templateStatus("Vorlage geladen. Lokale Dauerspeicherung ist blockiert; beim nächsten Besuch erneut auswählen.","");}}
+}
+el("templateFile").addEventListener("change",async function(e){
+ var file=e.target.files&&e.target.files[0];if(!file)return;
+ try{await useTemplate(await file.arrayBuffer(),file.name,true);status("QSL-Vorlage bereit.","ok");}
+ catch(err){status("PDF-Vorlage nicht übernommen: "+err.message,"error");}
+ finally{e.target.value="";}
+});
+el("uploadLabel").addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();el("templateFile").click();}});
+el("forgetBtn").addEventListener("click",async function(){
+ try{await deleteSaved();}catch(e){}
+ templateBytes=null;el("templateName").textContent="";templateStatus("Keine Vorlage geladen. Wähle die originale ausfüllbare MOwlSINT-QSL-PDF aus.","");
+ if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null;}
+ el("preview").hidden=true;el("preview").src="about:blank";el("emptyPreview").hidden=false;
+ status("Gespeicherte Vorlage entfernt.","ok");
+});
+function validData(){
+ if(!templateBytes)throw Error("Bitte zuerst die ausfüllbare MOwlSINT-QSL-PDF-Vorlage auswählen.");
+ if(!el("approved").checked)throw Error("Bitte bestätige zuerst die manuelle Prüfung des Empfangsberichts.");
+ var required=["Listener","Date_UTC","Time_UTC","Frequency","Program","Location"];
+ for(var i=0;i<required.length;i++){var field=el(required[i]);if(!field.checkValidity()||!field.value.trim()){field.focus();throw Error("Bitte Pflichtfeld "+field.labels[0].textContent+" prüfen.");}}
+ if(value("SINPO")&&!/^[1-5]{5}$/.test(value("SINPO")))throw Error("SINPO muss aus fünf Ziffern zwischen 1 und 5 bestehen.");
+ var dt=value("Date_UTC"),tm=value("Time_UTC");
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)||!/^\d{2}:\d{2}$/.test(tm))throw Error("Datum und Zeit müssen gültige UTC-Angaben sein.");
+ if(Number(value("Frequency"))!==6070)status("Hinweis: Die Frequenz weicht von 6070 kHz ab. Bitte die abweichende Ausstrahlung besonders gründlich überprüfen.","");
+ return true;
+}
+function shrink(field,value,maxLen){field.setFontSize(value.length>maxLen?8.0:9.2);}
+async function buildPdf(){
+ validData();requireLibrary();
+ var pdf=await PDFLib.PDFDocument.load(templateBytes.slice(0));
+ var form=pdf.getForm();
+ var data={
+  Date_UTC:value("Date_UTC"),Time_UTC:value("Time_UTC")+" UTC",
+  Frequency:value("Frequency")+" kHz",Band:value("Band"),Program:value("Program"),
+  Transmitter:value("Transmitter"),Location:value("Location"),SINPO:value("SINPO"),
+  Receiver:value("Receiver"),Antenna:value("Antenna"),Listener:value("Listener"),
+  Remarks:value("Remarks"),Verified_by:value("Verified_by"),Signature:value("Signature")
+ };
+ EXPECTED.forEach(function(name){
+  var f=form.getTextField(name);f.setText(data[name]||"");
+  shrink(f,data[name]||"",name==="Remarks"?75:(name==="Verified_by"?12:28));
+ });
+ form.getTextField("Remarks").enableMultiline();
+ // Appearance refresh with a standard font; covers Western European DX names, e.g. São Miguel.
+ var font=await pdf.embedFont(PDFLib.StandardFonts.TimesRoman);
+ form.updateFieldAppearances(font);
+ if(el("flatten").checked)form.flatten();
+ pdf.setTitle("MOwlSINT Radio – QSL – "+value("Listener"));
+ pdf.setSubject("Shortwave reception confirmation – The Monthly Signal");
+ pdf.setAuthor("MOwlSINT Radio");
+ return await pdf.save({useObjectStreams:false});
+}
+function safeFileName(s){return s.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]+/g,"_").replace(/^_+|_+$/g,"").slice(0,48)||"Listener";}
+function fileName(){return "MOwlSINT_QSL_"+value("Date_UTC")+"_"+safeFileName(value("Listener"))+".pdf";}
+function betterError(err){var str=String(err&&err.message||err);if(/WinAnsi|encode|encoding|glyph/i.test(str))return "Ein Zeichen kann von der Standardschrift nicht dargestellt werden. Bitte das betroffene Feld in lateinischer Umschrift eingeben. Details: "+str;return str;}
+async function run(mode){
+ var btn=el(mode==="preview"?"previewBtn":"downloadBtn");
+ var old=btn.textContent;btn.disabled=true;btn.textContent="PDF wird erstellt …";
+ try{
+  var bytes=await buildPdf();
+  var blob=new Blob([bytes],{type:"application/pdf"});
+  if(mode==="download"){
+   var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download=fileName();document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},60000);
+   status("PDF erstellt und zum Download bereitgestellt: "+fileName(),"ok");
+  }else{
+   if(previewUrl)URL.revokeObjectURL(previewUrl);
+   previewUrl=URL.createObjectURL(blob);el("preview").src=previewUrl;el("preview").hidden=false;el("emptyPreview").hidden=true;
+   status("Die PDF-Vorschau wurde erzeugt. Prüfe die Einträge vor dem Versand.","ok");
+  }
+ }catch(err){status(betterError(err),"error");}
+ finally{btn.disabled=false;btn.textContent=old;}
+}
+el("previewBtn").addEventListener("click",function(){run("preview");});
+el("downloadBtn").addEventListener("click",function(){run("download");});
+el("resetBtn").addEventListener("click",function(){
+ ["Listener","Date_UTC","Time_UTC","Location","SINPO","Receiver","Antenna","Remarks"].forEach(function(x){el(x).value="";});
+ el("approved").checked=false;status("Hörerdaten gelöscht. Senderangaben und die Vorlage bleiben erhalten.","ok");
+});
+window.addEventListener("pagehide",function(){if(previewUrl)URL.revokeObjectURL(previewUrl);});
+(async function init(){
+ try{var saved=await loadSaved();if(saved)await useTemplate(saved,"Gespeicherte Retro-QSL-Vorlage",false);}
+ catch(err){templateStatus("Vorlage kann bei Bedarf hochgeladen werden. Der lokale Speicher ist momentan nicht verfügbar.","");}
+})();
+})();
+</script>
+</body>
+</html>
