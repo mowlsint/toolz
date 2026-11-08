@@ -3596,18 +3596,13 @@ async function importPDF(file){
  try{
   const options={headings:$('pdfDetectHeadings').checked,tables:$('pdfDetectTables').checked,
    links:$('pdfCollectLinks').checked,pagebreaks:$('pdfPageBreaks').checked};
-  let result, usedOCR=false;
+  let result, usedOCR=false,fastTextOk=false;
   if($('pdfForceOCR').checked){
     result=await ocrLocally(file,options,status);usedOCR=true;
   }else{
     try{
-      // PDF.js handles embedded font encodings and ToUnicode maps.
       result=await window.MOwlBrowserOCR.extractPDF(file,options,message=>{status.textContent=message});
-      if($('pdfAutoOCR').checked && result.scanPages?.length){
-        status.textContent='Textebene geladen. OCR nur für '+result.scanPages.length+' Seite(n) …';
-        result=await window.MOwlBrowserOCR.convertSelectedPDF(file,options,result,message=>{status.textContent=message});
-        usedOCR=true;
-      }
+      fastTextOk=true;
     }catch(extractError){
       status.textContent='Unicode-Leser nicht verfügbar. Einfachen Offline-Leser testen …';
       try{
@@ -3615,6 +3610,17 @@ async function importPDF(file){
         result.warning=[result.warning,'PDF.js nicht verfügbar; Sonderzeichen bitte nachprüfen.'].filter(Boolean).join(' ');
       }catch(oldError){
         throw Error('PDF.js: '+(extractError?.message||extractError)+'; Offline-Leser: '+(oldError?.message||oldError));
+      }
+    }
+    if(fastTextOk && $('pdfAutoOCR').checked && result.scanPages?.length){
+      const original=result;
+      status.textContent='OCR nur für '+result.scanPages.length+' problematische Seite(n) …';
+      try{
+        result=await window.MOwlBrowserOCR.convertSelectedPDF(file,options,result,message=>{status.textContent=message});
+        usedOCR=true;
+      }catch(ocrError){
+        result=original;
+        result.warning=[result.warning,'OCR nicht verfügbar: '+(ocrError?.message||ocrError)].filter(Boolean).join(' ');
       }
     }
   }
