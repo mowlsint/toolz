@@ -138,6 +138,79 @@
     if(groups.other.length){lines.push('=== ABSCHNITT C — SPRACHE UNGEKLÄRT / GEMISCHT (PRÜFEN) ===','');for(const x of groups.other)appendItem(x);}
     return lines.join('\n');
   }
+  // Markdown v1 is human-readable and machine-identifiable. JSON remains canonical
+  // for consuming all provenance, ambiguities and dates without parsing prose.
+  function asMarkdown(items,opts={}) {
+    const showContent=opts.includeContent!==false, groups=groupedItems(items);
+    const lines=[
+      '<!-- WL_FORMAT: mowlsint.white_lightning.markdown.v1 -->',
+      '# MOwlSINT White Lightning — Textdestillat',
+      '',
+      '> Regelbasierte Rohdaten. Kein Lagebild, keine Faktenbestätigung, keine automatische Übersetzung.',
+      '> Fehlende Daten sind ausdrücklich unbekannt. Originalsprache und Quellenbezug bleiben erhalten.',
+      '',
+    ];
+    const mdInline=s=>String(s??'').replace(/\\/g,'\\\\').replace(/([*_\[\]`<>])/g,'\\$1').replace(/\r?\n/g,' ');
+    const writeField=(name,v)=>lines.push('- **'+name+':** '+(v===null||v===undefined||v===''?'[NICHT ERMITTELT]':(/^\[[^\]]+\]$/.test(String(v))?String(v):mdInline(v))));
+    const fenced=(content)=>{
+      const t=String(content||'');
+      let n=4;
+      for(const match of t.matchAll(/`+/g))n=Math.max(n,match[0].length+1);
+      const fence='`'.repeat(n);
+      lines.push(fence+'text',t||'[KEIN AUSLESBARER TEXT]',fence,'');
+    };
+    const writeDate=(label,obj,kind)=>{
+      writeField(label,dateLabel(obj,kind));
+      writeField(label+' — Status',obj?.status||'unknown');
+      writeField(label+' — Prüfpflicht',obj?.review_required?'ja':'nein');
+      if(obj?.basis)writeField(label+' — Beleggrundlage',obj.basis);
+      if(obj?.evidence)writeField(label+' — Beleg',obj.evidence);
+    };
+    function appendItem(it,translated=false){
+      const tr=it.translation_de||{};
+      const title=translated?(tr.title||it.title+' [Übersetzungstitel fehlt]'):it.title;
+      const form=translated?'de_translation':'original';
+      lines.push('<!-- WL_RECORD_START id="'+String(it.id).replace(/[^a-zA-Z0-9_-]/g,'')+'" variant="'+form+'" -->');
+      lines.push('### '+mdInline(title),'');
+      writeField('Meldungs-ID',it.id);
+      writeField('Fassung',translated?'de_translation':'original');
+      writeField('Datensatztyp',it.record_kind||'report_candidate');
+      writeField('Originalsprache',it.original_language||'unbestimmt');
+      writeDate('Ereignisdatum',it.event_date,'event_date');
+      writeDate('Meldedatum',it.report_date,'report_date');
+      writeDate('Veröffentlichungsdatum',it.publication_date,'published_date');
+      writeField('Meldungszeitpunkt UTC',it.reported_at);
+      writeField('Eingangszeitpunkt UTC',it.received_at);
+      writeField('Quelle',it.source_name);
+      writeField('Quelldatei',it.source_file);
+      writeField('Elterndatei/Anhang',it.parent_file);
+      writeField('Seite von',it.source_page);
+      writeField('Seite bis',it.source_page_end);
+      writeField('Quellabschnitt',it.source_section);
+      writeField('Extraktionsverfahren',it.extraction_method);
+      writeField('Bearbeitungsstatus',it.status||'ungeprüfter Rohdatenhinweis');
+      if(translated)writeField('Übersetzung',tr.reviewed?'manuell geprüft':'extern eingefügt, ungeprüft');
+      if(!translated&&languageGroup(it)==='en')writeField('Deutsche Fassung',(tr.text||tr.title)?'siehe Abschnitt A, gleiche Meldungs-ID':'nicht vorhanden');
+      if(it.derived_from_ids?.length)writeField('Ursprungskennungen',it.derived_from_ids.join(', '));
+      if(it.source_origins?.length)writeField('Quellabschnitte',it.source_origins.map(o=>[o.id,o.source_file,o.source_page,o.source_section].filter(Boolean).join(' / ')).join(' ; '));
+      if(it.topics?.length)writeField('Themen',it.topics.join(', '));
+      if(it.urls?.length){lines.push('- **Links:**');for(const u of it.urls)lines.push('  - '+mdInline(u));}
+      else writeField('Links','[KEIN LINK ENTHALTEN]');
+      if(it.review?.length){lines.push('- **Prüfhinweise:**');for(const hint of it.review)lines.push('  - '+mdInline(hint));}
+      lines.push('');
+      if(showContent){lines.push('#### '+(translated?'Deutsche Fassung (extern eingefügt)':'Originalinhalt (bereinigt)'),'');fenced(translated?(tr.text||'[KEIN DEUTSCHER TEXT EINGEFÜGT]'):it.text);}
+      lines.push('<!-- WL_RECORD_END -->','');
+    }
+    lines.push('## Abschnitt A — Deutsche Originalmeldungen und vorhandene Übersetzungen','');
+    for(const it of groups.de)appendItem(it);
+    for(const it of groups.en)if(it.translation_de?.text?.trim()||it.translation_de?.title?.trim())appendItem(it,true);
+    if(!groups.de.length&&!groups.en.some(it=>it.translation_de?.text?.trim()||it.translation_de?.title?.trim()))lines.push('_Keine deutschen Originalmeldungen oder Übersetzungen._','');
+    lines.push('## Abschnitt B — Englische Originalmeldungen','');
+    for(const it of groups.en)appendItem(it);
+    if(!groups.en.length)lines.push('_Keine englischen Meldungen._','');
+    if(groups.other.length){lines.push('## Abschnitt C — Sprache ungeklärt / gemischt (prüfen)','');for(const it of groups.other)appendItem(it);}
+    return lines.join('\n');
+  }
   function splitManual(t){const s=trimmed(t);if(!s)return [];const parts=s.split(/\n\s*---\s*\n|\n\s*={4,}\s*\n/g).map(x=>x.trim()).filter(Boolean);return parts.map(p=>{const l=p.split('\n');return {title:l[0].slice(0,500),text:l.slice(1).join('\n')||l[0]};});}
-  return {SCHEMA,UNKNOWN,isoDay,dayFromRFC,hash,cleanText,getUrls,candidateDates,detectEventDate,detectPublished,normalizeInput,mergeIdenticals,asText,splitManual,dateObj,groupedItems,languageGroup};
+  return {SCHEMA,UNKNOWN,isoDay,dayFromRFC,hash,cleanText,getUrls,candidateDates,detectEventDate,detectPublished,normalizeInput,mergeIdenticals,asText,asMarkdown,splitManual,dateObj,groupedItems,languageGroup};
 });
