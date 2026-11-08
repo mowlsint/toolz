@@ -2,6 +2,7 @@
 ## White Lightning 1.3 und Moonshine 4.4 (redaktionelle Testfassung)
 
 **Stand:** 8. November 2026  
+**Direkt in den Tools:** [White-Lightning-Hilfe](../white-lightning/hilfe.html) · [Moonshine-Hilfe](hilfe.html). Die Hilfen sind auch über die Schaltfläche „? HILFE / ANLEITUNG“ in den jeweiligen Anwendungen erreichbar.  
 **Ziel:** Aus Outlook-Meldungen, PDFs und Textdateien zunächst nachvollziehbare Einzelmeldungen erzeugen und anschließend in einem **eigenständigen** Werkzeug ein deutsches Lagebild erstellen.
 
 > **Versionshinweis:** White Lightning 1.3 liegt im Repository `mowlsint/toolz`. Moonshine 4.4 ist eine neu aufgebaute redaktionelle Testfassung mit direktem White-Lightning-Import, inspiriert vom Arbeitsablauf der archivierten Wochenlage 3.6 und den strukturierten Datensätzen der Moonshine-Prompts 4.3. Moonshine 4.4 enthält **nicht automatisch sämtliche alten Spezialparser** für alle früheren PDF-/Office-Formate. Ein vollständiger Abnahmetest auf dem Dienstrechner steht noch aus.
