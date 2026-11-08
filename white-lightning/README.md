@@ -4,7 +4,7 @@
 
 **Web:** `https://mowlsint.github.io/toolz/white-lightning/`
 
-**Version 1.2:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung.
+**Version 1.3:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung. Ergänzt: manuelles Aufteilen/Zusammenführen, Rückgängig-Funktion und Markdown-Export mit festem Kennungsformat.
 
 ## Formate
 
@@ -13,7 +13,24 @@
 - `.pdf`: Text-PDFs via PDF.js 3.11.174. Textspalten werden anhand von Koordinaten als vorläufige Kandidaten getrennt; das ist **keine** verlässliche Einzelartikel-Erkennung. Spaltenübergreifende Überschriften, Tabellen, Mehrspaltenartikel und wechselnde Layouts bleiben prüfpflichtig. Ohne Textschicht bleibt ein OCR-Hinweis.
 - `.txt`, `.md`, `.html`, `.json`, `.jsonl`: lokale Texte und strukturierte Meldungen. Bei Markdown können wiederholte `#`/`##`-Überschriften, bei TXT wiederholte explizit nummerierte Meldungsüberschriften und bei beiden `---`-Trennzeilen in **prüfpflichtige** Einzelabschnitte aufgeteilt werden. YAML-Frontmatter und Codeblöcke sind vor dem Trennen geschützt.
 
-Alle Daten bleiben im Browser-Arbeitsspeicher. Keine Outlook-API, kein Backend, keine KI-Anfrage. Für PDF.js werden Script und Worker beim ersten PDF-Import von einem CDN geladen; PDF-Bytes bleiben lokal. Zur Wiederverwendung TXT oder JSON auf das eigene Gerät exportieren; im öffentlichen Repository werden keine Rohdaten gespeichert.
+Alle Daten bleiben im Browser-Arbeitsspeicher. Keine Outlook-API, kein Backend, keine KI-Anfrage. Für PDF.js werden Script und Worker beim ersten PDF-Import von einem CDN geladen; PDF-Bytes bleiben lokal. Zur Wiederverwendung TXT, Markdown oder JSON auf das eigene Gerät exportieren; im öffentlichen Repository werden keine Rohdaten gespeichert.
+
+## Redaktionelle Korrektur von Artikelgrenzen
+
+- Bei einem falsch zusammengefügten Artikel den Rohtext der Meldung öffnen und `[[WL-TRENNEN]]` auf eine **eigene Zeile** zwischen zwei Textteile setzen; dann **Am Marker aufteilen** wählen. Der Trennmarker wird nicht in die Teilmeldungen übernommen.
+- Bei einem über Spalten/Seiten aufgeteilten Artikel einen passenden Abschnitt **derselben Quelldatei, Originalsprache und Datensatzart** im Dropdown auswählen und **Ausgewählte Abschnitte zusammenführen** klicken. Die Kombination erfolgt in ursprünglicher Importreihenfolge, **nicht** nach einer automatischen Behauptung, dass beide Teile denselben Artikel bilden.
+- Beide Aktionen vergeben neue Meldungs-IDs. Ausgangskennungen stehen in `derived_from_ids`, Fundstellen und Zeitstände aller Quellabschnitte in `source_origins`. Die Daten stehen im JSON; im MD erscheinen Quellabschnitte und ursprüngliche Kennungen.
+- Ein bei manueller Teilung zuvor angenommenes Ereignisdatum wird wieder **prüfpflichtig und ohne Wert**; bei Zusammenführung voneinander abweichende Daten werden **ambiguous** und nicht überschrieben.
+- Meldungen mit vorhandenen deutschen Übersetzungen müssen vor einer Grenzkorrektur gesichert und die Übersetzung entfernt werden; es erfolgt keine stille Änderung oder Löschung einer Übersetzung.
+- **Letzte Teilung / Zusammenführung rückgängig** hält bis zu acht Bearbeitungsschritte lokal im Browser vor. Bei neuem Import oder Löschen der Arbeitsliste verfällt diese Undo-Historie. Vor umfangreicher Redaktion JSON sichern.
+
+## Exportformate und Moonshine-Schnittstelle (v1.3)
+
+- **TXT**: unkompliziertes Textdestillat zum manuellen Kopieren.
+- **MD**: lesbarer Markdown-Export mit Überschriften, `<!-- WL_RECORD_START id="..." variant="..." -->` und `<!-- WL_RECORD_END -->` für **jeden Datensatz**, eindeutiger `Meldungs-ID`, Sprachabschnitt A deutsch/B englisch/C ungeklärt, Quelldatei, Seite, Extraktionsart, sämtlichen Datumswerten samt Status und Prüfvermerken. Im Markdown stehen die Originaltexte in variablen Text-Codeblöcken, damit Überschriften innerhalb der Quelle keine neuen Meldungen erzeugen. Vorhandene deutsche Übersetzungen stehen in A, das englische Original bleibt mit **gleicher ID** in B.
+- **JSON** (`mowlsint.white_lightning.bundle.v1`): verbindliches, maschinenlesbares Austauschformat für das geplante Moonshine-Lagebildwerkzeug. Die ursprünglichen Datums- und Herkunftsobjekte samt Kandidaten, Evidenz und Bearbeitungshistorie bleiben vollständig erhalten. Das spätere Moonshine-Tool darf weder unbekannte Ereignisdaten aus Veröffentlichungs-/Meldedatum ableiten noch Dokumentköpfe als Ereignisse interpretieren.
+
+Die Schnittstellenfestlegung steht in [`MOONSHINE_IMPORT.md`](MOONSHINE_IMPORT.md). Der Export ist weiterhin **kein Lagebild**. MD und TXT können vollständige Artikel enthalten und dürfen nicht ohne entsprechende Rechte verbreitet werden.
 
 ## Datumsvertrag v1
 
@@ -45,8 +62,12 @@ Der JSON-Export (`mowlsint.white_lightning.bundle.v1`) enthält `items` mit Eint
 
 ```sh
 node white-lightning/tests/test.cjs
+node white-lightning/tests/segments.test.cjs
+node white-lightning/tests/editor-export.test.cjs
 # Optionale private Testdateien nur außerhalb des Repositorys:
 WL_MSG_FIXTURE_DIR=/lokaler/pfad node white-lightning/tests/test.cjs
+node white-lightning/tests/segments.test.cjs
+node white-lightning/tests/editor-export.test.cjs
 ```
 
 Keinerlei Beispieldaten oder personenbezogene Rohdateien werden mit diesem Tool ausgeliefert.
