@@ -3632,6 +3632,47 @@ async function importPDF(file){
  finally{pdfImportBusy=false;button.disabled=side.disabled=false}
 }
 function addImages(files){let n=0;for(const f of files){if(!/^image\/(png|jpeg|gif|webp|bmp)$/i.test(f.type))continue;const key=f.name.toLowerCase();if(images.has(key))URL.revokeObjectURL(images.get(key));const url=URL.createObjectURL(f);images.set(key,url);const probe=new Image();probe.onload=()=>{if(images.get(key)===url)schedule()};probe.src=url;n++}$('imageInfo').textContent=images.size+' Bilddatei(en) geladen; Zuordnung über den Dateinamen.';layout();notify(n+' Bilddatei(en) hinzugefügt.')}
+
+async function imagesToDocument(files){
+  const status=$('imageImportStatus');
+  const picked=Array.from(files||[]).filter(f=>/^image\/(png|jpeg|webp|gif|bmp)$/i.test(f.type)||/\.(png|jpe?g|gif|webp|bmp)$/i.test(f.name));
+  if(!picked.length){status.textContent='Bitte PNG, JPG, WEBP, GIF oder BMP auswählen.';return;}
+  addImages(picked);
+  const chunks=picked.map(f=>{
+    const title=f.name.replace(/[\[\]]/g,'');
+    const target=encodeURI(f.name).replace(/\(/g,'%28').replace(/\)/g,'%29');
+    return '!['+title+']('+target+')';
+  });
+  const md=chunks.join('\n\n<!-- pagebreak -->\n\n');
+  if(editor.value===demo)editor.value='';
+  editor.value=(editor.value.trim() ? editor.value.trimEnd()+'\n\n<!-- pagebreak -->\n\n' : '')+md;
+  filename=picked.length===1?picked[0].name.replace(/\.[^.]+$/i,'.md'):'Bilder.md';
+  $('fileNameTag').textContent=filename;
+  layout();
+  status.textContent='✓ '+picked.length+' Bild(er) eingefügt. Jetzt „Als PDF speichern“ wählen.';
+  notify('Bild(er) übernommen. PDF über den Druckdialog speichern.');
+  if(window.matchMedia('(max-width:880px)').matches)mobileView('preview');
+}
+async function imageToMarkdownOCR(file){
+  if(!file)return;
+  if(editor.value!==demo&&!window.confirm('Aktuelles Markdown durch den erkannten Bildtext ersetzen?'))return;
+  const status=$('imageImportStatus'),a=$('imageAsPdfButton'),b=$('imageOcrButton');
+  a.disabled=b.disabled=true;
+  try{
+    const result=await window.MOwlBrowserOCR.convertImage(file,{headings:$('pdfDetectHeadings').checked},message=>{status.textContent=message});
+    editor.value=result.markdown;
+    filename=file.name.replace(/\.[^.]+$/i,'.md');
+    $('fileNameTag').textContent=filename;
+    settings.titleInput='';$('titleInput').value='';
+    layout();
+    status.textContent='✓ '+result.characters.toLocaleString('de-DE')+' Zeichen erkannt. Text bitte prüfen.';
+    notify('Bildtext als Markdown übernommen.');
+    if(window.matchMedia('(max-width:880px)').matches)mobileView('editor');
+  }catch(e){
+    status.textContent='Bild-OCR fehlgeschlagen: '+(e?.message||e);
+    notify('Bild-OCR fehlgeschlagen.');
+  }finally{a.disabled=b.disabled=false}
+}
 function insertSelection(before,after='',placeholder='Text'){const start=editor.selectionStart,end=editor.selectionEnd,text=editor.value;const chosen=text.slice(start,end)||placeholder;editor.value=text.slice(0,start)+before+chosen+after+text.slice(end);editor.focus();editor.setSelectionRange(start+before.length,start+before.length+chosen.length);schedule()}
 function insertAtCursor(text){const pos=editor.selectionStart;editor.setRangeText(text,pos,editor.selectionEnd,'end');editor.focus();schedule()}
 // Direct link insertion: preserve the selection while the user edits the link target.
@@ -3769,6 +3810,11 @@ function mobileView(view){$('sidebar').classList.toggle('show',view==='settings'
 function listen(){for(const id of CONFIG_IDS){$(id).addEventListener(CHECKS.has(id)?'change':'input',()=>{updateToggles();schedule()});if(!CHECKS.has(id))$(id).addEventListener('change',schedule)}$('marginPreset').addEventListener('change',()=>{const preset=$('marginPreset').value;const mm={narrow:12,normal:20,wide:30}[preset];if(mm){$('marginH').value=mm;$('marginV').value=mm;updateToggles();schedule()}});for(const id of ['marginH','marginV'])$(id).addEventListener('input',()=>{$('marginPreset').value='custom'});editor.addEventListener('input',schedule);editor.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();editor.setRangeText('  ',editor.selectionStart,editor.selectionEnd,'end');schedule()}});
  $('ocrCheckButton').onclick=checkOcrBridge;
  $('openPdfTop').onclick=()=>$('pdfFile').click();$('openPdfSide').onclick=()=>$('pdfFile').click();$('pdfFile').onchange=e=>{importPDF(e.target.files[0]);e.target.value=''};
+
+ $('imageAsPdfButton').onclick=()=>$('imagePdfFile').click();
+ $('imagePdfFile').onchange=e=>{imagesToDocument(e.target.files);e.target.value=''};
+ $('imageOcrButton').onclick=()=>$('imageOcrFile').click();
+ $('imageOcrFile').onchange=e=>{imageToMarkdownOCR(e.target.files[0]);e.target.value=''};
  $('openMdTop').onclick=()=>$('mdFile').click();$('mdFile').onchange=e=>{openMarkdown(e.target.files[0]);e.target.value=''};$('saveMdTop').onclick=saveMarkdown;$('saveMdEditor').onclick=saveMarkdown;$('printTop').onclick=printing;
  $('addImages').onclick=()=>$('imageFiles').click();$('imageFiles').onchange=e=>{addImages(e.target.files);e.target.value=''};
  $('exportSettings').onclick=()=>{setSettingsFromInputs();makeFile('md-pdf-einstellungen.json',JSON.stringify(settings,null,2),'application/json')};$('importSettings').onclick=()=>$('settingsFile').click();$('settingsFile').onchange=e=>{importSettings(e.target.files[0]);e.target.value=''};
