@@ -125,6 +125,7 @@
 .ocr-status.ok{border-left-color:#34735D;background:#E5F2EC;color:#285D46}
 .ocr-status.err{border-left-color:#B06B43;background:#FFF0E7;color:#895033}
 .ocr-check{display:block;width:100%;font-size:11px!important;padding:7px!important}
+.pdf-import-card .two .btn{white-space:normal;min-height:38px}
 </style>
 <style id="printPageSize">@page { size: A4 portrait; margin: 0; }</style>
 <script src="./browser-ocr.js"></script>
@@ -143,7 +144,7 @@
     <div class="side-title">MOwlSINT · MD ↔ PDF</div>
     <div class="pdf-import-card">
       <strong>PDF → Markdown</strong>
-      <p class="help">PDF in editierbares Markdown wandeln. Text-PDF direkt im Browser; Scans mit <b>Browser-OCR</b> (Tesseract.js). Keine Dokument-Uploads.</p>
+      <p class="help">PDF in editierbares Markdown wandeln. Unicode-PDF-Texterkennung (auch Magic-Paws-Schriften). OCR nur bei Scan-Seiten. Keine Dokument-Uploads.</p>
       <button class="btn pdf-import-button" type="button" id="openPdfSide">↑ PDF auswählen</button>
       <label class="check"><input type="checkbox" id="pdfDetectHeadings" checked> Überschriften erkennen</label>
       <label class="check"><input type="checkbox" id="pdfDetectTables" checked> Tabellen rekonstruieren</label>
@@ -151,7 +152,7 @@
       <label class="check"><input type="checkbox" id="pdfPageBreaks"> Seitenwechsel übernehmen</label>
       <div class="ocr-settings">
         <strong class="ocr-settings-title">▧ OCR für gescannte PDF-Seiten</strong>
-        <label class="check"><input type="checkbox" id="pdfAutoOCR" checked> OCR automatisch bei fehlendem Text</label>
+        <label class="check"><input type="checkbox" id="pdfAutoOCR" checked> OCR nur auf Seiten ohne lesbaren Text</label>
         <label class="check"><input type="checkbox" id="pdfForceOCR"> Alle Seiten mit OCR neu erkennen</label>
         <div class="two">
           <div class="field"><label for="ocrLanguage">OCR-Sprache</label>
@@ -165,6 +166,7 @@
       <div class="pdf-import-status" id="pdfImportStatus" aria-live="polite">Noch kein PDF eingelesen.</div>
       <p class="help">Browser-OCR benötigt <b>keine lokale Installation</b>. Beim ersten Scan werden Programmdateien und Sprachmodelle extern geladen. Die PDF-Dateien bleiben im Browser. Scans und komplexe Tabellen müssen nachkontrolliert werden.</p>
     </div>
+    <div class="pdf-import-card"><strong>Bilder → PDF / Markdown</strong><p class="help">PNG, JPG, WEBP, BMP, GIF. Bild als PDF-Seite übernehmen oder Text mit OCR erkennen.</p><div class="two"><button class="btn pdf-import-button" id="imageAsPdfButton" type="button">▧ Bild → PDF</button><button class="btn pdf-import-button" id="imageOcrButton" type="button">▤ Bild → MD (OCR)</button></div><p class="help">Bild → PDF: Bilder einfügen und oben „Als PDF speichern“. Beim Markdown-Export die Bilddateien im selben Ordner aufbewahren.</p><div class="pdf-import-status" id="imageImportStatus" aria-live="polite">Noch kein Bild übernommen.</div></div>
     <div class="side-title">Dokument gestalten</div>
     <div class="section-head">Allgemein</div>
     <div class="field"><label for="titleInput">Dokumenttitel</label><input id="titleInput" placeholder="Aus erster Überschrift übernehmen"></div><div class="field"><label for="pdfName">PDF-Dateiname (optional)</label><input id="pdfName" placeholder="Ohne .pdf · sonst Dateiname aus .md"></div>
@@ -243,6 +245,8 @@
 </div>
 <nav class="mobile-tabs" id="mobileTabs"><button data-view="settings">⚙ Einstellungen</button><button data-view="editor">✎ Markdown</button><button data-view="preview" class="active">▣ Vorschau</button></nav>
 <input type="file" id="pdfFile" accept=".pdf,application/pdf" hidden>
+<input type="file" id="imagePdfFile" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif,.png,.jpg,.jpeg,.webp,.bmp,.gif" multiple hidden>
+<input type="file" id="imageOcrFile" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif,.png,.jpg,.jpeg,.webp,.bmp,.gif" hidden>
 <input type="file" id="mdFile" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
 <input type="file" id="imageFiles" accept="image/*" multiple hidden>
 <input type="file" id="settingsFile" accept=".json,application/json" hidden>
