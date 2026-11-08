@@ -4,12 +4,14 @@
 
 **Web:** `https://mowlsint.github.io/toolz/white-lightning/`
 
+**Version 1.2:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung.
+
 ## Formate
 
 - `.msg`: Microsoft Outlook MSG Compound File; Unicode- und ANSI-Text, MAPI-Sende- und Empfangszeit sowie reguläre Dateianhänge (z. B. PDF).
 - `.eml`: RFC-822-Mails einschließlich einfacher MIME-Multipart- und Base64-Anhänge (PDF, TXT, MD). Komplexes S/MIME/TNEF wird derzeit nicht unterstützt.
-- `.pdf`: textbasierte PDFs seitenweise via PDF.js 3.11.174. Keine OCR, keine zuverlässige automatische Artikeltrennung in mehrspaltigen Layouts. Jede Seite wird deshalb mit Quellverweis und Prüfhinweis exportiert.
-- `.txt`, `.md`, `.html`, `.json`, `.jsonl`: lokale Texte und strukturierte Meldungen. Manuelles Trennzeichen `---` auf einer eigenen Zeile.
+- `.pdf`: Text-PDFs via PDF.js 3.11.174. Textspalten werden anhand von Koordinaten als vorläufige Kandidaten getrennt; das ist **keine** verlässliche Einzelartikel-Erkennung. Spaltenübergreifende Überschriften, Tabellen, Mehrspaltenartikel und wechselnde Layouts bleiben prüfpflichtig. Ohne Textschicht bleibt ein OCR-Hinweis.
+- `.txt`, `.md`, `.html`, `.json`, `.jsonl`: lokale Texte und strukturierte Meldungen. Bei Markdown können wiederholte `#`/`##`-Überschriften, bei TXT wiederholte explizit nummerierte Meldungsüberschriften und bei beiden `---`-Trennzeilen in **prüfpflichtige** Einzelabschnitte aufgeteilt werden. YAML-Frontmatter und Codeblöcke sind vor dem Trennen geschützt.
 
 Alle Daten bleiben im Browser-Arbeitsspeicher. Keine Outlook-API, kein Backend, keine KI-Anfrage. Für PDF.js werden Script und Worker beim ersten PDF-Import von einem CDN geladen; PDF-Bytes bleiben lokal. Zur Wiederverwendung TXT oder JSON auf das eigene Gerät exportieren; im öffentlichen Repository werden keine Rohdaten gespeichert.
 
@@ -30,7 +32,10 @@ Der JSON-Export (`mowlsint.white_lightning.bundle.v1`) enthält `items` mit Eint
 ## Grenzen und Prüfsicherheit
 
 - Die Datumsverknüpfung ist konservativ, aber nur heuristisch. Erkannte Ereignisdaten müssen nachgeprüft werden.
-- PDF-Seiten werden nicht als fertige Einzelartikel ausgegeben, mehrspaltige Texte benötigen Prüfung. Gescannten Seiten fehlt ohne OCR die Textebene.
+- PDF-Spaltenblöcke sind **keine** fertigen Einzelartikel, mehrspaltige Texte benötigen Prüfung. Gescannten Seiten fehlt ohne OCR die Textebene.
+- **OCR-Weg:** Bei Scan-PDF im bestehenden MD/PDF-Studio (Link auf der White-Lightning-Oberfläche) lokal OCR ausführen, Markdown exportieren und bei White Lightning importieren. Die OCR des MD/PDF-Studios ist technisch wiederverwendbar, benötigt aber Tesseract.js und Sprachmodelle aus dem Internet. Wenn dienstliche Filter das verhindern, muss die OCR vorher mit einer dienstlich genehmigten Software erfolgen; keine Uploads an unautorisierte Dienste. White Lightning selbst lädt **keine** OCR-Bibliothek und **keine** Sprachmodelle nach.
+- Strukturierte Berichte mit wiederholten Eintragsköpfen `[YYYY-MM-DD HH:MM]` werden nur bei mindestens zwei solchen Markern getrennt und können über PDF-Seitengrenzen weiterlaufen. Die Kopfzeit ist ein unbewerteter Meldungs-/Eintragshinweis, **keine UTC- und keine Ereigniszeit**. Dokumentköpfe tragen `record_kind: document_context` und sind ausdrücklich keine Ereignisse.
+- `.md` und `.txt` werden ohne externe Bibliotheken geladen; ein fehlender Titel oder eine unsichere Abschnittsgrenze erhält einen Prüfhinweis statt erfundener Fakten.
 - Wortgleiche Meldungen werden als Dubletten gekennzeichnet; unterschiedliche Darstellungen werden nicht fälschlich zusammengeführt.
 - E-Mail-Footer werden nur in wenigen klaren Fällen entfernt, um keine Fakten zu zerstören.
 - MSG mit Verschlüsselung, eingebetteten MSG-Objekten, S/MIME oder TNEF werden nicht vollständig gelesen.
