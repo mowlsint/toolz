@@ -1,7 +1,7 @@
 /* MOwlSINT White Lightning browser app: source files only in JS memory. */
 (() => {
 'use strict';
-const C=window.WLCore,M=window.WLMsg;const $=id=>document.getElementById(id);const state={items:[],files:0,errors:[],duplicates:0};let pdfReady=null;
+const C=window.WLCore,M=window.WLMsg,D=window.WLDocument;const $=id=>document.getElementById(id);const state={items:[],files:0,errors:[],duplicates:0};let pdfReady=null;
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const size=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB';
 const basename=n=>String(n||'').split(/[\\/]/).pop();
@@ -26,16 +26,49 @@ function parseEml(raw,filename){const content=String(raw).replace(/\r\n?/g,'\n')
 }
 function untrustedFileWarning(name){if(/\.pdf$/i.test(name))return 'PDF-Seiteninhalt nicht automatisch als einzelne Artikel interpretiert. Bei Spaltenlayout prüfen.';return '';}
 function add(item){state.items.push(C.normalizeInput(item));}
-function importText(text,filename='Manueller Text',meta={}){const chunks=C.splitManual(text);for(const p of chunks)add({title:p.title,text:p.text,filename,type:meta.type||'text',source_name:meta.source_name||'',reported_at:meta.reported_at||null,report_date:meta.report_date||null,reported_raw:meta.reported_raw||'',report_basis:meta.report_basis||'',received_at:meta.received_at||null,parent_file:meta.parent_file||null, warnings:meta.warnings||[]});return chunks.length;}
+function importText(text,filename='Manueller Text',meta={}){
+ const ext=filename.split('.').pop().toLowerCase(),format=ext==='md'?'md':'txt';
+ const chunks=D.splitText(text,filename,format);
+ for(const part of chunks)add({title:part.title,text:part.text,filename,type:meta.type||format,
+  source_name:meta.source_name||'',reported_at:meta.reported_at||null,
+  reported_raw:meta.reported_raw||'',received_at:meta.received_at||null,
+  parent_file:meta.parent_file||null,section:chunks.length>1?`Abschnitt ${part.section}/${chunks.length}`:null,
+  extraction_method:part.method, report_date:part.reportDate||meta.report_date||null,
+  report_basis:part.reportDate?'Datierter Eintragskopf (Zeitzone ungeklärt)':meta.report_basis||'',
+  warnings:[...(meta.warnings||[]),...part.warnings]});
+ return chunks.length;
+}
 async function pdfLibrary(){if(window.pdfjsLib)return window.pdfjsLib;if(pdfReady)return pdfReady;pdfReady=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';script.crossOrigin='anonymous';script.onload=()=>{if(!window.pdfjsLib)return reject(Error('PDF.js nicht geladen'));window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';resolve(window.pdfjsLib);};script.onerror=()=>reject(Error('PDF.js konnte nicht geladen werden (CDN/Netzwerk). Keine Datei wurde hochgeladen.'));document.head.append(script);});return pdfReady;}
-function pageLines(items){const rows=[];for(const x of items){if(typeof x.str!=='string'||!x.str.trim())continue;const yy=Number(x.transform?.[5]||0),xx=Number(x.transform?.[4]||0);let r=rows.find(v=>Math.abs(v.y-yy)<2.5);if(!r){r={y:yy,v:[]};rows.push(r);}r.v.push({x:xx,str:x.str});}
- rows.sort((a,b)=>b.y-a.y);return rows.map(r=>r.v.sort((a,b)=>a.x-b.x).map(a=>a.str.trim()).filter(Boolean).join(' ')).join('\n');}
-async function parsePdf(bytes,filename,meta={}){const pdfjs=await pdfLibrary();const task=pdfjs.getDocument({data:bytes.slice(),isEvalSupported:false});let doc=await task.promise;let imported=0;let originPub=null;try{
- for(let page=1;page<=doc.numPages;page++){const p=await doc.getPage(page),tc=await p.getTextContent(),text=pageLines(tc.items);
- if(page===1)originPub=C.detectPublished(text,filename);const published=originPub?.value||null;
- add({title:`${filename} — Seite ${page}`,text,filename,type:'pdf_page',page,source_name:meta.source_name||'',parent_file:meta.parent_file||null,reported_at:meta.reported_at||null,report_date:meta.report_date||null,report_basis:meta.report_basis||'',received_at:meta.received_at||null,published_date:published,published_basis:published?'Dokumentkopf (erste PDF-Seite)':'',published_review:!!published,published_evidence:originPub?.evidence||'',warnings:[untrustedFileWarning(filename),...(meta.warnings||[]),...(!text.trim()?['Seite ohne extrahierbare Textebene (Scan/OCR nicht ausgeführt)']:[])].filter(Boolean)});imported++;
- } }finally{try{await task.destroy();}catch{}}
- return imported;}
+async function parsePdf(bytes,filename,meta={}){
+ const pdfjs=await pdfLibrary(),task=pdfjs.getDocument({data:bytes.slice(),isEvalSupported:false});
+ const doc=await task.promise;let imported=0,originPub=null,pages=[];
+ try{
+  for(let page=1;page<=doc.numPages;page++){
+   const pdfPage=await doc.getPage(page),tc=await pdfPage.getTextContent();
+   const viewport=pdfPage.getViewport({scale:1});
+   const blocks=D.pdfPage(tc.items,viewport.width,viewport.height,page);
+   if(page===1)originPub=C.detectPublished(blocks.map(b=>b.text).join('\n'),filename);
+   pages.push({page,blocks});pdfPage.cleanup();
+  }
+ }finally{try{await task.destroy();}catch{}}
+ const structured=D.splitLabeledReports(pages,filename);
+ const chunks=structured||pages.flatMap(p=>p.blocks);
+ for(const part of chunks){
+  const published=originPub?.value||null;
+  add({title:structured?part.title:`${filename} — ${part.title}`,text:part.text,filename,type:part.method,
+    page:part.page,page_end:part.pageEnd||null,
+    section:part.column?`Spalte ${part.column}/${part.columns}`:(structured?`Eintrag aus PDF${part.pageEnd!==part.page?' (mehrseitig)':''}`:null),
+    extraction_method:part.method,source_name:meta.source_name||'',parent_file:meta.parent_file||null,
+    reported_at:meta.reported_at||null,report_date:part.reportDate||meta.report_date||null,
+    report_basis:part.reportDate?'Datiertes Berichtseintragsfeld (Zeitzone ungeklärt)':meta.report_basis||'',
+    received_at:meta.received_at||null,published_date:published,
+    published_basis:published?'Dokumentkopf (erste PDF-Seite)':'',published_review:!!published,
+    published_evidence:originPub?.evidence||'',warnings:[...part.warnings,...(meta.warnings||[]),
+      ...(!part.text.trim()?['OCR erforderlich: vorher im MD/PDF-Studio oder zugelassenen OCR-Programm in Markdown/TXT konvertieren.']:[])]});
+  imported++;
+ }
+ return imported;
+}
 async function processBinary(filename,bytes,meta={},depth=0){const name=basename(filename);const ext=name.split('.').pop().toLowerCase();if(depth>1)throw Error('Verschachtelte Nachrichten nicht unterstützt');
  if(ext==='pdf')return parsePdf(bytes,name,meta);
  if(ext==='msg'){const msg=M.parseMSG(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));let count=0;
@@ -47,7 +80,7 @@ async function processBinary(filename,bytes,meta={},depth=0){const name=basename
  if(ext==='eml'){const mail=parseEml(raw,name);let count=0;add({title:mail.subject,text:mail.body,filename:name,type:'eml_mail',reported_at:mail.sent_at,report_date:mail.report_date,report_basis:'E-Mail-Date-Header',reported_raw:raw.slice(0,100),received_at:mail.received_at,source_name:'E-Mail'});count++;
  for(const a of mail.attachments){if(!a.bytes){state.errors.push(`${name}: Anhang ${a.filename} nicht lesbar`);continue;}if(/\.(pdf|txt|md)$/i.test(a.filename)){try{count+=await processBinary(a.filename,a.bytes,{parent_file:name,reported_at:mail.sent_at,report_date:mail.report_date,report_basis:'E-Mail-Date-Header'},depth+1);}catch(e){state.errors.push(`${name} / ${a.filename}: ${e.message}`);}}}return count;}
  if(ext==='html'||ext==='htm')return importText(htmlText(raw),name,{...meta,type:'html'});
- if(ext==='txt'||ext==='md')return importText(raw,name,meta);
+ if(ext==='txt'||ext==='md')return importText(raw,name,{...meta,type:ext});
  if(ext==='json'||ext==='jsonl'){
  const arr=ext==='jsonl'?raw.split('\n').filter(Boolean).map(s=>JSON.parse(s)):(x=>Array.isArray(x)?x:(x.items||[x]))(JSON.parse(raw));let count=0;
  for(const e of arr){if(!e||typeof e!=='object')continue;if(e.schema===C.SCHEMA&&typeof e.title==='string'&&e.event_date){state.items.push({...e,translation_de:e.translation_de||{title:null,text:null,status:'pending',method:null,reviewed:false},review:Array.isArray(e.review)?e.review:[],urls:Array.isArray(e.urls)?e.urls:[],topics:Array.isArray(e.topics)?e.topics:[]});count++;continue;}
@@ -60,7 +93,7 @@ async function importFiles(files){if(!files.length)return;let count=0;const errs
 function dedupe(){const r=C.mergeIdenticals(state.items);state.items=r.items;state.duplicates+=r.duplicates;}
 function dateEditor(label,obj,idx,key){const status=obj?.status||'unknown',v=obj?.value||'';return `<label>${label}<input type="date" data-i="${idx}" data-key="${key}" value="${escape(v)}" aria-label="${escape(label)}"/><small>${status==='partial'?'Unvollständige Datumsangabe':status==='ambiguous'?'Mehrere mögliche Daten':status==='unverified'?'Datum ohne sicheren Bezug':v?(obj.review_required?'Automatisch erkannt · prüfen':'Gesetzt / aus Meldung'):'Unbekannt · Platzhalter bleibt erhalten'}</small></label>`;}
 function languageSelect(it,i){const choices=[['de','Deutsch'],['en','Englisch'],['gemischt','Gemischt'],['unbestimmt','Nicht ermittelt']];return `<label>Originalsprache (bei Bedarf korrigieren)<select data-i="${i}" data-field="original_language">${choices.map(([v,n])=>`<option value="${v}" ${it.original_language===v?'selected':''}>${n}</option>`).join('')}</select></label>`;}
-function card(it,i){const translation=it.translation_de||{};return `<article class="item" data-item="${i}"><div class="item-header"><div><strong class="item-index">${escape(it.id)} · ${it.original_language==='en'?'EN':it.original_language==='de'?'DE':'SPRACHE PRÜFEN'}</strong><h3>${escape(it.title)}</h3><p class="source">${escape(it.source_file||'Manuelle Eingabe')}${it.source_page?' · Seite '+it.source_page:''}${it.parent_file?' · Anhang aus '+escape(it.parent_file):''} · ${escape(it.source_type)}</p></div><button class="minimal" data-delete="${i}" title="Aus der Arbeitsliste entfernen">Entfernen</button></div>
+function card(it,i){const translation=it.translation_de||{};return `<article class="item" data-item="${i}"><div class="item-header"><div><strong class="item-index">${escape(it.id)} · ${it.original_language==='en'?'EN':it.original_language==='de'?'DE':'SPRACHE PRÜFEN'}</strong><h3>${escape(it.title)}</h3><p class="source">${escape(it.source_file||'Manuelle Eingabe')}${it.source_page?' · Seite '+it.source_page+(it.source_page_end&&it.source_page_end!==it.source_page?'–'+it.source_page_end:''):''}${it.parent_file?' · Anhang aus '+escape(it.parent_file):''}${it.source_section?' · '+escape(it.source_section):''} · ${escape(it.source_type)}${it.record_kind==='document_context'?' · Dokumentkopf (kein Ereignis)':''}</p></div><button class="minimal" data-delete="${i}" title="Aus der Arbeitsliste entfernen">Entfernen</button></div>
  <div class="dategrid">${dateEditor('Ereignisdatum',it.event_date,i,'event_date')}${dateEditor('Meldedatum',it.report_date,i,'report_date')}${dateEditor('Veröffentlichungsdatum',it.publication_date,i,'publication_date')}</div>
  <div class="metagrid"><label>Quelle / Urheber<input type="text" data-i="${i}" data-field="source_name" value="${escape(it.source_name||'')}" placeholder="Nicht ermittelt" /></label><label>Überschrift<input type="text" data-i="${i}" data-field="title" value="${escape(it.title)}" /></label></div>
  <div class="languagebar">${languageSelect(it,i)}${it.original_language==='en'?`<button class="minimal" data-copy-original="${i}" title="Englischen Originaltext für externes Übersetzungsprogramm kopieren">Englischen Originaltext kopieren</button>`:''}</div>
