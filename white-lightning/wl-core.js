@@ -92,16 +92,51 @@
     const identity=[src.filename||'',src.page||'',title,content].join('|');
     return { schema:SCHEMA,id:'wl_'+hash(identity), title, text:content,original_language:detectLanguage(title+' '+content),source_name:src.source_name||null, source_file:src.filename||null,source_type:src.type||'text',source_page:src.page||null,parent_file:src.parent_file||null, urls:url,
       event_date:event,report_date:report,reported_at:src.reported_at||null,received_at:src.received_at||null, publication_date:published,
-      topics:classify(title+'\n'+content), review: [...(src.warnings||[]),...(cleaning.removed_lines?[`Entfernte technische Warn-/Trennzeilen: ${cleaning.removed_lines}`]:[]),...(content?'':['Kein auslesbarer Nachrichtentext'])], policy:'local_only_review_before_reuse',original_message_id:src.message_id||null,original_hash:hash(identity),status:'ungeprüfter Rohdatenhinweis' };
+      translation_de:{title:null,text:null,status:'pending',method:null,reviewed:false}, topics:classify(title+'\n'+content), review: [...(src.warnings||[]),...(cleaning.removed_lines?[`Entfernte technische Warn-/Trennzeilen: ${cleaning.removed_lines}`]:[]),...(content?'':['Kein auslesbarer Nachrichtentext'])], policy:'local_only_review_before_reuse',original_message_id:src.message_id||null,original_hash:hash(identity),status:'ungeprüfter Rohdatenhinweis' };
   }
   function mergeIdenticals(items){const seen=new Map(),out=[];let duplicates=0;for(const it of items){let k=hash([it.title.toLowerCase(),it.text.replace(/\s+/g,' ').toLowerCase()].join('|'));if(seen.has(k)){duplicates++;const prev=seen.get(k);prev.review.push(`Identische Importkopie erkannt: ${it.source_file||'manuell'}`);prev.duplicate_sources=[...(prev.duplicate_sources||[]),{filename:it.source_file,page:it.source_page,report_date:it.report_date?.value||null}];continue;}seen.set(k,it);out.push(it);}return {items:out,duplicates};}
   function dateLabel(d,kind){return d&&d.value?d.value:UNKNOWN[kind]||'[DATUM NICHT ERMITTELT]';}
-  function asText(items,opts={}){const showContent=opts.includeContent!==false;const lines=['MOwlSINT WHITE LIGHTNING — TEXTDESTILLAT','Kein Lagebild · keine Faktenprüfung · keine KI-Übersetzung','Datumsplatzhalter sind ausdrücklich unbekannte Angaben und dürfen nicht stillschweigend ersetzt werden.',''];
-    for(let i=0;i<items.length;i++){const x=items[i];lines.push(`=== MELDUNG ${i+1} / ${items.length} ===`,x.title,`Ereignisdatum: ${dateLabel(x.event_date,'event_date')}${x.event_date.review_required?' [PRÜFEN]':''}`,`Meldedatum: ${dateLabel(x.report_date,'report_date')}`,`Veröffentlichungsdatum: ${dateLabel(x.publication_date,'published_date')}${x.publication_date.review_required?' [PRÜFEN]':''}`,`Meldungszeitpunkt (UTC): ${x.reported_at||'[NICHT ERMITTELT]'}`,`Eingangszeitpunkt (UTC): ${x.received_at||'[NICHT ERMITTELT]'}`,`Quelle: ${x.source_name||'[NICHT ERMITTELT]'}`,`Fundstelle: ${x.source_file||'[MANUELL]'}${x.source_page?' · Seite '+x.source_page:''}${x.parent_file?' · Anhang zu '+x.parent_file:''}`,`Sprache (heuristisch): ${x.original_language||'unbestimmt'}`,`Themen: ${x.topics.join(', ')||'[NICHT ZUGEORDNET]'}`,`Link(s): ${x.urls.join(' | ')||'[KEIN LINK ENTHALTEN]'}`,`Bearbeitungsstatus: ${x.status}`);
-      if(x.event_date.basis)lines.push(`Datumsbefund: ${x.event_date.basis}${x.event_date.evidence?' — '+x.event_date.evidence:''}`);
-      if(x.review.length)lines.push(`Prüfhinweise: ${x.review.join(' | ')}`);
-      if(showContent)lines.push('Originalinhalt (bereinigt, NICHT übersetzt):',x.text||'[KEIN AUSLESBARER TEXT]');lines.push('');
-    }return lines.join('\n');}
+  function languageGroup(item){return item?.original_language==='de'?'de':item?.original_language==='en'?'en':'other';}
+  function groupedItems(items){const buckets={de:[],en:[],other:[]};for(const x of items||[])buckets[languageGroup(x)].push(x);return buckets;}
+  function asText(items,opts={}){
+    const showContent=opts.includeContent!==false;
+    const groups=groupedItems(items);
+    const lines=['MOwlSINT WHITE LIGHTNING — TEXTDESTILLAT',
+      'Kein Lagebild · keine Faktenprüfung · keine automatische Übersetzung',
+      'Originaltexte bleiben erhalten. Ergänzte Übersetzungen sind mit der ursprünglichen Meldungs-ID verknüpft.',
+      'Datumsplatzhalter dürfen nicht stillschweigend ersetzt werden.',''];
+    function appendItem(x,translated=false){
+      const tr=x.translation_de||{};
+      const title=translated?(tr.title?.trim()||'[DEUTSCHE ÜBERSCHRIFT NICHT VORHANDEN]'):x.title;
+      lines.push(`=== ${translated?'DEUTSCHE FASSUNG':'ORIGINALMELDUNG'} · ${x.id} ===`,title,
+        `Ereignisdatum: ${dateLabel(x.event_date,'event_date')}${x.event_date?.review_required?' [PRÜFEN]':''}`,
+        `Meldedatum: ${dateLabel(x.report_date,'report_date')}`,
+        `Veröffentlichungsdatum: ${dateLabel(x.publication_date,'published_date')}${x.publication_date?.review_required?' [PRÜFEN]':''}`,
+        `Meldungszeitpunkt (UTC): ${x.reported_at||'[NICHT ERMITTELT]'}`,
+        `Eingangszeitpunkt (UTC): ${x.received_at||'[NICHT ERMITTELT]'}`,
+        `Quelle: ${x.source_name||'[NICHT ERMITTELT]'}`,
+        `Fundstelle: ${x.source_file||'[MANUELL]'}${x.source_page?' · Seite '+x.source_page:''}${x.parent_file?' · Anhang zu '+x.parent_file:''}`,
+        `Originalsprache: ${x.original_language||'unbestimmt'}`,
+        `Themen: ${(x.topics||[]).join(', ')||'[NICHT ZUGEORDNET]'}`,
+        `Link(s): ${(x.urls||[]).join(' | ')||'[KEIN LINK ENTHALTEN]'}`,
+        `Bearbeitungsstatus: ${x.status||'ungeprüft'}`);
+      if(translated){lines.push(`Übersetzungsstatus: ${tr.reviewed?'manuell geprüft':'ungeprüft (externes dienstliches Übersetzungsprogramm)'}`,`Zugehöriges englisches Original: ${x.id} (Abschnitt B)`);}
+      else if(languageGroup(x)==='en')lines.push(`Deutsche Fassung: ${tr.text?.trim()||tr.title?.trim()?'vorhanden · siehe Abschnitt A':'[NICHT VORHANDEN]'}`);
+      if(x.event_date?.basis)lines.push(`Datumsbefund: ${x.event_date.basis}${x.event_date.evidence?' — '+x.event_date.evidence:''}`);
+      if(x.review?.length)lines.push(`Prüfhinweise: ${x.review.join(' | ')}`);
+      if(showContent)lines.push(translated?'Deutsche Fassung (extern eingefügt):':'Originalinhalt (bereinigt, NICHT übersetzt):',translated?(tr.text?.trim()||'[KEIN DEUTSCHER TEXT EINGEFÜGT]'):(x.text||'[KEIN AUSLESBARER TEXT]'));
+      lines.push('');
+    }
+    lines.push('=== ABSCHNITT A — DEUTSCHE MELDUNGEN UND VORHANDENE ÜBERSETZUNGEN ===','');
+    for(const x of groups.de)appendItem(x);
+    for(const x of groups.en){if(x.translation_de?.text?.trim()||x.translation_de?.title?.trim())appendItem(x,true);}
+    if(!groups.de.length&&!groups.en.some(x=>x.translation_de?.text?.trim()||x.translation_de?.title?.trim()))lines.push('[KEINE DEUTSCHEN MELDUNGEN ODER ÜBERSETZUNGEN]','');
+    lines.push('=== ABSCHNITT B — ENGLISCHE ORIGINALMELDUNGEN ===','');
+    for(const x of groups.en)appendItem(x);
+    if(!groups.en.length)lines.push('[KEINE ENGLISCHEN MELDUNGEN]','');
+    if(groups.other.length){lines.push('=== ABSCHNITT C — SPRACHE UNGEKLÄRT / GEMISCHT (PRÜFEN) ===','');for(const x of groups.other)appendItem(x);}
+    return lines.join('\n');
+  }
   function splitManual(t){const s=trimmed(t);if(!s)return [];const parts=s.split(/\n\s*---\s*\n|\n\s*={4,}\s*\n/g).map(x=>x.trim()).filter(Boolean);return parts.map(p=>{const l=p.split('\n');return {title:l[0].slice(0,500),text:l.slice(1).join('\n')||l[0]};});}
-  return {SCHEMA,UNKNOWN,isoDay,dayFromRFC,hash,cleanText,getUrls,candidateDates,detectEventDate,detectPublished,normalizeInput,mergeIdenticals,asText,splitManual,dateObj};
+  return {SCHEMA,UNKNOWN,isoDay,dayFromRFC,hash,cleanText,getUrls,candidateDates,detectEventDate,detectPublished,normalizeInput,mergeIdenticals,asText,splitManual,dateObj,groupedItems,languageGroup};
 });
