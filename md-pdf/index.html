@@ -3598,21 +3598,25 @@ async function importPDF(file){
    links:$('pdfCollectLinks').checked,pagebreaks:$('pdfPageBreaks').checked};
   let result, usedOCR=false;
   if($('pdfForceOCR').checked){
-   result=await ocrLocally(file,options,status);usedOCR=true;
+    result=await ocrLocally(file,options,status);usedOCR=true;
   }else{
-   try{
-    result=await window.MOwlPdfImport.convert(file,options,message=>{status.textContent=message});
-    // Mixed PDFs: if most pages appear to contain scans, run OCR across all pages.
-    if($('pdfAutoOCR').checked && (result.scanPages?.length>0 || (result.pages>1 && result.characters<result.pages*36))){
-      status.textContent='Nur wenig maschinenlesbarer Text gefunden. OCR wird verwendet …';
-      result=await ocrLocally(file,options,status);usedOCR=true;
+    try{
+      // PDF.js handles embedded font encodings and ToUnicode maps.
+      result=await window.MOwlBrowserOCR.extractPDF(file,options,message=>{status.textContent=message});
+      if($('pdfAutoOCR').checked && result.scanPages?.length){
+        status.textContent='Textebene geladen. OCR nur für '+result.scanPages.length+' Seite(n) …';
+        result=await window.MOwlBrowserOCR.convertSelectedPDF(file,options,result,message=>{status.textContent=message});
+        usedOCR=true;
+      }
+    }catch(extractError){
+      status.textContent='Unicode-Leser nicht verfügbar. Einfachen Offline-Leser testen …';
+      try{
+        result=await window.MOwlPdfImport.convert(file,options,message=>{status.textContent=message});
+        result.warning=[result.warning,'PDF.js nicht verfügbar; Sonderzeichen bitte nachprüfen.'].filter(Boolean).join(' ');
+      }catch(oldError){
+        throw Error('PDF.js: '+(extractError?.message||extractError)+'; Offline-Leser: '+(oldError?.message||oldError));
+      }
     }
-   }catch(e){
-    if($('pdfAutoOCR').checked && /(?:keinen auslesbaren Text|OCR erforderlich)/i.test(String(e.message))){
-     status.textContent='Scan ohne Text erkannt; lokale OCR wird verwendet …';
-     result=await ocrLocally(file,options,status);usedOCR=true;
-    } else throw e;
-   }
   }
   result.method=result.method||(usedOCR?'ocr':'text');
   editor.value=result.markdown;
@@ -3620,7 +3624,7 @@ async function importPDF(file){
   $('fileNameTag').textContent=filename;
   settings.titleInput='';$('titleInput').value='';
   layout();
-  status.textContent='✓ '+(result.method==='ocr'?'OCR · ':'Text-PDF · ')+result.pages+' Seite(n) · '+result.characters.toLocaleString('de-DE')+' Zeichen · '+result.headings+' Überschriften · '+result.tables+' Tabellen · '+result.links+' Webverweise.'+(result.warning?' '+result.warning:'');
+  status.textContent='✓ '+(result.method==='ocr'?'OCR · ':result.method==='mixed'?'Text + OCR · ':'Text-PDF · ')+result.pages+' Seite(n) · '+result.characters.toLocaleString('de-DE')+' Zeichen · '+result.headings+' Überschriften · '+result.tables+' Tabellen · '+result.links+' Webverweise.'+(result.warning?' '+result.warning:'');
   status.classList.toggle('pdf-warning',Boolean(result.warning));
   if(window.matchMedia('(max-width:880px)').matches)mobileView('editor');
   notify('PDF als Markdown übernommen. Bitte prüfen und anschließend .md sichern.');
