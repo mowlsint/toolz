@@ -140,6 +140,8 @@
       if(isHeading){
         out+='\n\n## '+t+'\n\n';
       }else if(prev && !prev.heading && !/^[-•*]\s/.test(t) &&
+        Math.abs(prev.size-line.size)<2 &&
+        (prev.text.length>=58 || (prev.text.endsWith('-') && /^[a-zäöüß]/.test(t))) &&
         prev.y-line.y <lineSpacing*1.32 && prev.y-line.y>=0 &&
         !out.endsWith('\n\n')){
         out=out.replace(/\s+$/,'');
@@ -149,7 +151,7 @@
         if(!out.endsWith('\n\n')&&out)out+='\n\n';
         out+=t;
       }
-      prev={y:line.y,heading:isHeading};
+      prev={y:line.y,heading:isHeading,text:t,size:line.size};
     }
     return out.replace(/\n{3,}/g,'\n\n').trim();
   }
