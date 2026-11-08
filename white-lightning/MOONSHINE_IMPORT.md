@@ -1,6 +1,6 @@
 # White Lightning → Moonshine: Importvertrag, Stand 1.3
 
-Dies ist eine Schnittstellenfestlegung für das **künftige, eigenständige** deutsche Moonshine-Lagebildprogramm in `toolz`, **keine Implementierung von Moonshine**. White Lightning selbst erarbeitet kein Lagebild und nimmt keine behördliche Bewertung vor.
+Dies ist der Schnittstellenvertrag für das eigenständige deutsche Moonshine-Lagebildprogramm unter [MOwlSINT TOOLZ – Moonshine](../moonshine/). Eine erste redaktionelle Testfassung **Moonshine 4.4** kann White-Lightning-JSON und markiertes Markdown direkt importieren. Nicht alle alten Moonshine-3.6-Spezialparser sind darin übernommen. White Lightning selbst erarbeitet kein Lagebild und nimmt keine behördliche Bewertung vor.
 
 ## Eingang
 
