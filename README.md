@@ -7,6 +7,7 @@ Ein Portal für eigenständige Webwerkzeuge im MOwlSINT-Design (Elfenbein, Dark 
 - **Startseite:** https://mowlsint.github.io/toolz/
 - **MD ↔ PDF Studio:** https://mowlsint.github.io/toolz/md-pdf/ – Markdown → PDF, PDF → Markdown (PDF.js mit eingebetteten Unicode-Schriftarten), Scan-OCR nur für nicht lesbare Seiten, Bild → PDF und Bild → Markdown per OCR.
 - **Geo Converter:** https://mowlsint.github.io/toolz/geo-converter/ – KML, CSV und GeoJSON in alle sechs Richtungen umwandeln; mit Spaltenzuordnung, Tabellen- und schematischer Geometrievorschau sowie Offline-Download.
+- **White Lightning:** https://mowlsint.github.io/toolz/white-lightning/ – Lokale Rohdatendestillerie für Outlook-MSG, EML, PDF und Text. Textdestillat und strukturierter JSON-Export mit getrennten Ereignis-, Melde- und Publikationsdaten; ohne KI und ohne Lagebild-Erstellung.
 - **QSL Card Studio:** https://mowlsint.github.io/toolz/qsl-studio/ – Geprüfte Empfangsberichte in die ausfüllbare MOwlSINT-Retro-QSL-PDF eintragen, Vorschau und PDF-Download.
 
 ## GitHub Pages einschalten
