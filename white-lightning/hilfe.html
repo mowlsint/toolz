@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>White Lightning · Bedienungsanleitung</title>
+<link rel="stylesheet" href="../moonshine/style.css"><link rel="stylesheet" href="../moonshine/guide.css">
+<style>.manualnav{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 24px}.manualnav a{color:#183854;text-decoration:underline}.docmeta{font-size:12px;color:#555}.guide h3{scroll-margin-top:24px}</style>
+</head><body><header><div class="wrap topbar"><a class="identity" href="./"><span class="logomark">WL</span><span><strong>WHITE LIGHTNING</strong><small>BEDIENUNGSANLEITUNG · VERSION 1.3</small></span></a><a class="back" href="./">← WHITE LIGHTNING</a></div></header>
+<main class="wrap manual"><article class="paper guide">
+<h1>White Lightning · Bedienungsanleitung</h1>
+<p class="docmeta"><strong>Stand:</strong> 8. November 2026 · gilt für White Lightning 1.3. Bei jeder Funktionsänderung sind diese Anleitung, das Markdown-Handbuch und der Versionsverlauf gemeinsam zu aktualisieren.</p>
+<p><strong>Zweck:</strong> Outlook-Meldungen, PDF, TXT und Markdown zu belegbaren Einzelmeldungen destillieren. <strong>White Lightning erstellt kein Lagebild.</strong> Die anschließende deutsche Lagebild-Erstellung erfolgt in <a href="../moonshine/">Moonshine</a>.</p>
+<nav class="manualnav" aria-label="Zu den Anleitungsschritten">
+<a href="#import">Import</a><a href="#pdf-ocr">PDF/OCR</a><a href="#datumspruefung">Prüfung</a><a href="#artikelgrenzen">Artikelgrenzen</a><a href="#sprachen">Sprachen</a><a href="#export">Export</a>
+<a href="../moonshine/hilfe.html#moonshine-guide">Moonshine-Anleitung</a></nav>
+<h2 id="start">White Lightning – Rohdatendestillat herstellen</h2>
+<p><strong>Öffnen:</strong> <a href="https://mowlsint.github.io/toolz/white-lightning/">https://mowlsint.github.io/toolz/white-lightning/</a></p>
+<h3 id="import">Schritt 1 – Dateien importieren</h3>
+<p>Im Bereich <strong>„01 · Rohdaten einlesen“</strong> mit der Dateiauswahl oder per Drag &amp; Drop Dateien übernehmen. Unterstützt sind <code>.msg</code>, <code>.eml</code>, <code>.pdf</code>, <code>.txt</code>, <code>.md</code>, <code>.html</code>, <code>.json</code> und <code>.jsonl</code> (bis 40 MB je Datei). Bei lesbaren Outlook-Nachrichten können unterstützte Anhänge mit übernommen werden.</p>
+<p>Alternativ im Bereich <strong>„02 · Text manuell eingeben“</strong> eine Quelle angeben, einen Alert hineinkopieren und <strong>„Text übernehmen“</strong> anklicken. Mehrere Meldungen können durch eine eigene Zeile mit <code>---</code> getrennt werden.</p>
+<p>Bei Markdown dienen wiederkehrende Überschriften, bei TXT erkennbare Nummerierungen oder Trennlinien als <strong>Vorschläge</strong> für Abschnittsgrenzen; sie sind noch nicht automatisch fachlich geprüft.</p>
+<h3 id="pdf-ocr">Schritt 2 – PDF und OCR richtig behandeln</h3>
+<ul>
+<li><strong>Text-PDF:</strong> Direkt importieren. Bei mehreren Spalten werden zunächst Textblöcke erkannt. Das ist noch <strong>keine garantiert richtige Artikeltrennung</strong>.</li>
+<li><strong>Strukturierter Bericht:</strong> Wiederholte datierte Meldungsköpfe können Einzelmeldungen bilden und über Seitenumbrüche reichen. Die Kopfzeit ist nicht automatisch die Ereigniszeit.</li>
+<li><strong>Scan-PDF ohne Textebene:</strong> Mit einer zugelassenen OCR-Anwendung zu <code>.md</code> oder <code>.txt</code> verarbeiten, dann dieses Ergebnis in White Lightning laden.</li>
+</ul>
+<p>Das vorhandene <a href="https://mowlsint.github.io/toolz/md-pdf/">MD ↔ PDF Studio</a> besitzt Browser-OCR. Diese lädt beim ersten Einsatz jedoch Tesseract.js und Sprachdaten aus dem Internet. <strong>Auf einem gesperrten Dienstrechner</strong> kann dies untersagt oder technisch blockiert sein. In diesem Fall ausschließlich die dienstlich zugelassene OCR verwenden. White Lightning selbst lädt keine OCR-Modelle.</p>
+<p><strong>Ebenfalls beachten:</strong> White Lightning lädt beim direkten PDF-Import PDF.js von einem externen CDN. Ist diese Bibliothek im Dienstnetz gesperrt, das PDF mit zugelassenen Mitteln in TXT/MD umwandeln. Der TXT-/MD-Import benötigt diese PDF-Bibliothek nicht.</p>
+<h3 id="datumspruefung">Schritt 3 – Einzelmeldungen und Daten prüfen</h3>
+<p>Im Bereich <strong>„03 · Meldungen prüfen“</strong> jede importierte Meldung durchsehen. Kontrollieren, ob Überschrift, Inhalt und Originalquelle zusammengehören und ob Spalten vermischt wurden.</p>
+<ul>
+<li><strong>Ereignisdatum:</strong> Tatsächlicher Tag des Sachverhalts. Fehlt ein belastbarer Beleg, Platzhalter bestehen lassen.</li>
+<li><strong>Meldedatum:</strong> Zeitpunkt der Nachricht beziehungsweise des Versands.</li>
+<li><strong>Veröffentlichungsdatum:</strong> Datum der Quelle oder PDF-Ausgabe.</li>
+<li><strong>Sprache:</strong> Deutsch, Englisch oder ungeklärt; falsch erkannte Sprache korrigieren.</li>
+<li><strong>Prüfhinweise:</strong> Insbesondere Artikelgrenzen, OCR, Zahlen, unvollständige Daten und Dubletten kontrollieren.</li>
+</ul>
+<p>Beispiel: Ein Artikel erscheint am 6. November, berichtet aber nur über eine „derzeitige“ Umleitung. <strong>Veröffentlichungsdatum: 06.11.2026</strong>, <strong>Ereignisdatum: [EREIGNISDATUM NICHT ERMITTELT]</strong>. Das Veröffentlichungsdatum wird nicht zum Ereignisdatum.</p>
+<h3 id="artikelgrenzen">Schritt 4 – Fehlerhafte Artikelgrenzen korrigieren</h3>
+<p><strong>Aufteilen:</strong> In den bearbeitbaren Rohtext zwischen zwei Sachverhalte auf eine eigene Zeile <code>[[WL-TRENNEN]]</code> schreiben. <strong>„Am Marker aufteilen“</strong> klicken.</p>
+<p><strong>Zusammenführen:</strong> Beim betreffenden Datensatz einen zweiten passenden Abschnitt <strong>derselben Quelldatei und Originalsprache</strong> auswählen und <strong>„Ausgewählte Abschnitte zusammenführen“</strong> anklicken. Danach Textreihenfolge und Datumsangaben prüfen. Differierende Datumsangaben bleiben als Konflikt sichtbar. Ursprung und neue Meldungskennungen bleiben nachvollziehbar.</p>
+<p><strong>Rückgängig:</strong> Über <strong>„Letzte Teilung / Zusammenführung rückgängig“</strong> die jüngsten Grenzkorrekturen zurücknehmen. Vor umfangreichen Änderungen den aktuellen JSON-Stand sichern.</p>
+<h3 id="sprachen">Schritt 5 – Englisch behandeln</h3>
+<p>White Lightning sortiert die Ausgabe wie vereinbart:</p>
+<ul>
+<li><strong>Abschnitt A:</strong> Deutsche Originalmeldungen und eingefügte deutsche Übersetzungen.</li>
+<li><strong>Abschnitt B:</strong> Alle englischen Originalmeldungen – auch wenn eine deutsche Übersetzung vorliegt.</li>
+<li><strong>Abschnitt C:</strong> Unklare/gemischte Sprachen zur Prüfung.</li>
+</ul>
+<p>Bei einer englischen Meldung <strong>„Englischen Originaltext kopieren“</strong> verwenden, in ein <strong>dienstlich zugelassenes Übersetzungsprogramm</strong> einfügen und die erhaltene deutsche Fassung zurück in die Übersetzungsfelder der Meldung kopieren. Erst nach Vergleich mit dem Original <strong>„Übersetzung manuell geprüft“</strong> markieren. Original und Übersetzung behalten dieselbe Meldungs-ID. White Lightning startet keine Übersetzungssoftware und lädt keine Modelle herunter.</p>
+<h3 id="export">Schritt 6 – Ausgabe exportieren</h3>
+<p>Im Bereich <strong>„04 · Textdestillat exportieren“</strong>:</p>
+<table>
+<thead>
+<tr>
+  <th>Schaltfläche</th>
+  <th>Verwendung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>TXT herunterladen</strong></td>
+  <td>Direkt lesbarer und kopierbarer Klartext.</td>
+</tr>
+<tr>
+  <td><strong>MD herunterladen</strong></td>
+  <td>Redaktionell lesbare Markdown-Datei mit verlässlichen Start-/Endmarkierungen, Quellen, Datumsstatus und Sprachgruppen.</td>
+</tr>
+<tr>
+  <td><strong>JSON für spätere Tools</strong></td>
+  <td><strong>Bevorzugter Moonshine-Import.</strong> Vollständige Datenobjekte für Datum, Herkunft, Sprachstatus, Korrekturen und die gleiche Meldungs-ID.</td>
+</tr>
+<tr>
+  <td><strong>Text kopieren</strong></td>
+  <td>Ausgabe in die Zwischenablage übernehmen.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Empfehlung:</strong> Nach jeder größeren Bearbeitung mindestens <strong>JSON und MD</strong> sichern. Das JSON ist die maschinenlesbare Übergabe; das Markdown dient zur Sichtkontrolle und als Austauschtext.</p>
+<hr />
+
+<h2 id="fehler">Häufige Fehler und Abhilfe</h2>
+<table>
+<thead>
+<tr>
+  <th>Problem</th>
+  <th>Lösung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>PDF-Import in White Lightning blockiert</td>
+  <td>Prüfen, ob PDF.js/CDN erreichbar ist; sonst mit dienstlich zugelassenem Werkzeug in MD/TXT umwandeln.</td>
+</tr>
+<tr>
+  <td>Scan-PDF liefert keinen Text</td>
+  <td>Zunächst zugelassene OCR nutzen, Ergebnis prüfen und als MD/TXT importieren.</td>
+</tr>
+<tr>
+  <td>White Lightning hat zwei Artikel vermischt</td>
+  <td>Trennmarker <code>[[WL-TRENNEN]]</code> setzen und aufteilen.</td>
+</tr>
+<tr>
+  <td>Moonshine lehnt JSON ab</td>
+  <td>White-Lightning-<strong>Bundle-JSON</strong> (nicht beliebige JSON-Datei) exportieren; Arbeitsstand-JSON gesondert über „Arbeitsstand laden“ öffnen.</td>
+</tr>
+<tr>
+  <td>Moonshine lehnt Markdown ab</td>
+  <td>Nur White-Lightning-MD mit <strong>WL_FORMAT</strong>-Kennung oder <strong>getaggte v4.3-Zeilen</strong> direkt verwenden.</td>
+</tr>
+<tr>
+  <td>Meldung fehlt in der Lagebild-Vorschau</td>
+  <td>Redaktionell geprüft? Für Lagebild ausgewählt? Datum vorhanden? Deutscher Text vorhanden? Übersetzung überprüft? Berichtszeitraum korrekt?</td>
+</tr>
+<tr>
+  <td>Ereignisdatum unbekannt</td>
+  <td>Platzhalter stehen lassen; optional in die gesonderte Prüfrubrik aufnehmen – nicht in die datierte Chronologie zwingen.</td>
+</tr>
+<tr>
+  <td>Nur englischer Originaltext vorhanden</td>
+  <td>Mit zugelassenem Übersetzungsprogramm bearbeiten oder als englischen Anhang kennzeichnen; keine automatische Übersetzung.</td>
+</tr>
+<tr>
+  <td>Wochenlage lässt sich nicht speichern</td>
+  <td>Über „PDF / Drucken“ als PDF sichern, zusätzlich MD/TXT und den JSON-Arbeitsstand speichern.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="schutz">Datenschutz und fachliche Verantwortung</h2>
+<p>Die beiden Anwendungen arbeiten lokal im Browser; der öffentliche GitHub-Repository enthält ausschließlich Programmcode, Testtexte und Dokumentation, <strong>keine</strong> importierten dienstlichen E-Mails, Berichte oder Original-PDFs. Die Dateien müssen nur dort verarbeitet und abgelegt werden, wo dies dienstlich zulässig ist. Insbesondere klassifizierte Informationen, personenbezogene Daten und lizenzierte Pressevolltexte dürfen nicht ohne passende Berechtigung in fremde Webdienste oder öffentliche Repositories übertragen werden. Automatische Quellen- oder Tatsachenverifikation findet nicht statt.</p>
+<p><strong>Abnahmehinweis:</strong> Die deterministischen Import-, Datums-, Kategorien- und Exporttests wurden ausgeführt. Die vollständige GUI-Abnahme in einem tatsächlichen Dienstbrowser und die Gleichwertigkeit mit allen alten Spezialparsern der Version 3.6 sind <strong>nicht</strong> nachgewiesen.</p>
+
+<p><strong>Versionspflege:</strong> Weiterentwicklungen an Import, Datumslogik, OCR, Sprache, Abschnittsgrenzen oder Ausgabe müssen im <a href="./ANLEITUNG.md">Markdown-Handbuch</a> und in dieser Hilfeseite dokumentiert werden. Der verbindliche Übergabevertrag steht in <a href="./MOONSHINE_IMPORT.md">MOONSHINE_IMPORT.md</a>.</p>
+</article></main><footer>MOwlSINT TOOLZ · White Lightning · Keine automatische Tatsachenprüfung</footer></body></html>
