@@ -90,3 +90,13 @@ Die ursprüngliche **MOwlSINT_Radio_QSL_ausfuellbar.pdf** ist bewusst nicht öff
 Im Studio **Bild → PDF** wählen, ein oder mehrere PNG/JPG/WEBP/BMP/GIF-Bilder laden und **Als PDF speichern** anklicken. Das resultierende Markdown referenziert die Originalbilder per Dateinamen; beim späteren Öffnen der Markdown-Datei müssen die Bilder im selben Ordner liegen. Über **Bild → MD (OCR)** wird Bildtext erkannt. Bilder und Dokumente werden nicht hochgeladen.
 
 Für PDFs mit eingebetteten Schriften (z. B. Magic-Paws-Berichte mit Type0/Identity-H und Unicode-CMaps) verwendet das Studio PDF.js statt pauschaler OCR. Browser-OCR wird nur auf Seiten ohne auslesbare Textebene oder auf ausdrückliche Anforderung angewendet. Komplexe Tabellen und Spalten nachprüfen.
+
+## Bedienungsanleitungen und Dokumentationspflege
+
+Beide Tools enthalten jetzt einen sichtbaren Einstieg **„? HILFE / ANLEITUNG“** sowie kontextbezogene Hilfe direkt in den Arbeitsbereichen.
+
+- [White Lightning · Browserhilfe](white-lightning/hilfe.html) · [Markdown-Anleitung](white-lightning/ANLEITUNG.md)
+- [Moonshine · Browserhilfe](moonshine/hilfe.html) · [gemeinsames Markdown-Handbuch](moonshine/ANLEITUNG.md)
+- [Pflege-Checkliste](docs/ANLEITUNGEN_PFLEGE.md) · Prüfskript: `node docs/check-guides.cjs`
+
+Bei jeder nutzerrelevanten Programmänderung sind die entsprechenden Hilfeseiten und Versionshinweise im selben Änderungsvorgang zu aktualisieren. Für Änderungen der Schnittstelle White Lightning → Moonshine zusätzlich `white-lightning/MOONSHINE_IMPORT.md` prüfen.
