@@ -155,6 +155,57 @@
     }
     return out.replace(/\n{3,}/g,'\n\n').trim();
   }
+
+  // Reconstruct basic aligned PDF tables without scanning the page.
+  function pdfTableCells(row){
+    const words=row.items||[];
+    if(words.length<2)return null;
+    const cells=[];
+    for(const w of words){
+      const last=cells[cells.length-1];
+      const gap=last?w.x-last.end:0;
+      if(!last || gap>Math.max(22,w.size*2.25)){
+        cells.push({x:w.x,end:w.x+w.width,text:w.text});
+      }else{
+        if(!last.text.endsWith(' ')&&!w.text.startsWith(' ')&&gap>0.8)last.text+=' ';
+        last.text+=w.text;
+        last.end=Math.max(last.end,w.x+w.width);
+      }
+    }
+    if(cells.length<2||cells.length>7)return null;
+    return cells;
+  }
+  function rowsToMarkdown(rows,opts){
+    if(!opts.tables)return {markdown:linesToMarkdown(rows,opts),tables:0};
+    const out=[];let buffer=[],i=0,tables=0;
+    const flush=()=>{if(buffer.length){out.push(linesToMarkdown(buffer,opts));buffer=[]}};
+    while(i<rows.length){
+      const first=pdfTableCells(rows[i]);
+      let j=i+1;
+      if(first){
+        while(j<rows.length){
+          const cells=pdfTableCells(rows[j]);
+          if(!cells||cells.length!==first.length)break;
+          if(cells.some((c,k)=>Math.abs(c.x-first[k].x)>11))break;
+          if(rows[j-1].y-rows[j].y>Math.max(26,rows[j].size*2.3))break;
+          j++;
+        }
+      }
+      if(first&&j-i>=3){
+        flush();
+        const table=[];
+        for(let n=i;n<j;n++){
+          const cs=pdfTableCells(rows[n]);
+          table.push('| '+cs.map(c=>c.text.trim().replace(/\|/g,'\\|').replace(/\s+/g,' ')).join(' | ')+' |');
+        }
+        const header=table.shift();
+        out.push([header,'| '+first.map(()=>'---').join(' | ')+' |',...table].join('\n'));
+        tables++;i=j;
+      }else{buffer.push(rows[i]);i++}
+    }
+    flush();
+    return {markdown:out.filter(Boolean).join('\n\n'),tables};
+  }
   function compilePageMarkdown(pages,opts,links){
     let markdown=pages.map((t,i)=>i&&opts.pagebreaks?'<!-- pagebreak -->\n\n'+t:t).join('\n\n').trim();
     if(links.length)markdown+='\n\n## Weblinks aus dem PDF\n\n'+
@@ -170,7 +221,7 @@
     try{
       pdf=await window.pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
       if(pdf.numPages>500)throw Error('Das PDF ist zu groß (über 500 Seiten).');
-      const parts=[],scans=[],urls=new Set();let chars=0,headings=0;
+      const parts=[],scans=[],urls=new Set();let chars=0,headings=0,tables=0;
       for(let i=1;i<=pdf.numPages;i++){
         msg('PDF-Textebene: Seite '+i+' / '+pdf.numPages);
         const page=await pdf.getPage(i);
@@ -178,7 +229,9 @@
         const lines=collectPageLines(content);
         const raw=lines.map(l=>l.text).join('\n');
         const readable=glyphQuality(raw);
-        const md=linesToMarkdown(lines,opts);
+        const pageResult=rowsToMarkdown(lines,opts);
+      const md=pageResult.markdown;
+      tables+=pageResult.tables;
         // Preserve ordinary short title pages; flag empty/unreadable ones for OCR.
         if((raw.trim().length<12||!readable))scans.push(i);
         parts.push(readable?md:'');
@@ -193,7 +246,7 @@
         page.cleanup();
       }
       const links=[...urls],markdown=compilePageMarkdown(parts,opts,links);
-      return {markdown,pages:pdf.numPages,characters:chars,headings,tables:0,links:links.length,
+      return {markdown,pages:pdf.numPages,characters:chars,headings,tables,links:links.length,
         scanPages:scans,pageMarkdown:parts,urlList:links,method:'text',
         warning:scans.length?'Kein zuverlässiger PDF-Text auf Seite(n) '+scans.join(', ')+'.':'Tabellen und Spalten bitte überprüfen.'};
     }finally{
