@@ -189,3 +189,9 @@ Unter **„05 · Arbeitsstand“** **„Arbeitsstand speichern“** auswählen. 
 Die beiden Anwendungen arbeiten lokal im Browser; der öffentliche GitHub-Repository enthält ausschließlich Programmcode, Testtexte und Dokumentation, **keine** importierten dienstlichen E-Mails, Berichte oder Original-PDFs. Die Dateien müssen nur dort verarbeitet und abgelegt werden, wo dies dienstlich zulässig ist. Insbesondere klassifizierte Informationen, personenbezogene Daten und lizenzierte Pressevolltexte dürfen nicht ohne passende Berechtigung in fremde Webdienste oder öffentliche Repositories übertragen werden. Automatische Quellen- oder Tatsachenverifikation findet nicht statt.
 
 **Abnahmehinweis:** Die deterministischen Import-, Datums-, Kategorien- und Exporttests wurden ausgeführt. Die vollständige GUI-Abnahme in einem tatsächlichen Dienstbrowser und die Gleichwertigkeit mit allen alten Spezialparsern der Version 3.6 sind **nicht** nachgewiesen.
+## 7. Versionsverlauf und Pflege
+
+- **08.11.2026 · Moonshine 4.4 (Testfassung):** Eigenständige Lagebildredaktion in TOOLZ mit JSON-/MD-Import aus White Lightning, v4.3-Fachkennzeichnungen, manuellem redaktionellen Freigabeprozess und gesonderter Behandlung unbekannter Ereignisdaten. Die Hilfe ist über den Kopfbereich und die Arbeitsschritte direkt erreichbar.
+- **White Lightning 1.3:** Rohdaten-Destillat, Markdown/JSON/TXT und manuelle Artikelgrenzen; separate [White-Lightning-Hilfe](../white-lightning/hilfe.html).
+
+**Pflegeregel:** Bei jeder Funktionsänderung dieser beiden Werkzeuge sind die jeweiligen Browserhilfen, diese Markdown-Anleitung und bei Änderung der Übergabe auch [MOONSHINE_IMPORT.md](../white-lightning/MOONSHINE_IMPORT.md) zu prüfen. [Pflege-Checkliste](../docs/ANLEITUNGEN_PFLEGE.md).
