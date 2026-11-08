@@ -9,27 +9,27 @@
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header><div class="wrap topbar"><a class="identity" href="../"><span class="logomark">MS</span><span><strong>MOwlSINT · MOONSHINE</strong><small>LAGEBILDREDAKTION · VERSION 4.4 VORSCHAU</small></span></a><a class="back" href="../">← TOOLZ</a></div></header>
+<header><div class="wrap topbar"><a class="identity" href="../"><span class="logomark">MS</span><span><strong>MOwlSINT · MOONSHINE</strong><small>LAGEBILDREDAKTION · VERSION 4.4 VORSCHAU</small></span></a><nav class="helpnav" aria-label="Navigation"><a class="back" href="./hilfe.html#moonshine-guide" aria-label="Moonshine Bedienungsanleitung öffnen">? HILFE / ANLEITUNG</a><a class="back" href="../">← TOOLZ</a></nav></div></header>
 <main class="wrap">
 <div class="eyebrow">Eigenständige redaktionelle Arbeitsoberfläche · ohne KI</div>
 <h1>Moonshine</h1>
 <p class="lead">White-Lightning-Meldungen und die Klartextdatensätze aus Moonshine 4.3 zu einer überprüfbaren <strong>deutschen Wochenlage</strong> zusammenstellen. Ereignisdaten werden nie aus Meldedaten oder Dateinamen erfunden; offene Sachverhalte bleiben getrennt.</p>
-<div class="ribbon"><span>Nur lokale Browser-Verarbeitung</span><span>Keine Installation</span><span>Chronologie ≠ OSINT</span><span>Kein automatischer Upload</span></div>
+<p class="help-strip"><strong>Erste Schritte:</strong> <a href="./hilfe.html#moonshine-guide">Moonshine-Bedienungsanleitung</a> · <a href="../white-lightning/hilfe.html">White-Lightning-Vorbereitung</a> · <a href="./hilfe.html#moonshine-arbeitsstand">Arbeitsstand sichern</a></p><div class="ribbon"><span>Nur lokale Browser-Verarbeitung</span><span>Keine Installation</span><span>Chronologie ≠ OSINT</span><span>Kein automatischer Upload</span></div>
 <div class="layout">
 <div>
-<section class="panel" aria-labelledby="title-period"><h2 id="title-period">01 · Berichtszeitraum</h2>
+<section class="panel" aria-labelledby="title-period"><h2 id="title-period">01 · Berichtszeitraum</h2><details class="inlinehelp"><summary>Wie wähle ich die Kalenderwoche?</summary><p>KW und Jahr festlegen, dann „Zeitraum aus KW setzen“. Den Lage-Stichtag gesondert prüfen; er darf kein unbekanntes Ereignisdatum ersetzen. <a href="./hilfe.html#moonshine-zeitraum">Anleitung</a>.</p></details>
 <div class="fields"><label>Dokumenttitel<input id="reportTitle" value="WOCHENLAGE" maxlength="120"></label><label>Dienststelle / Zusatz (frei)<input id="office" placeholder="Dienststelle oder Redaktion" maxlength="160"></label></div>
 <div class="fields four"><label>Kalenderwoche<input id="week" type="number" min="1" max="53"></label><label>Jahr<input id="year" type="number" min="2000" max="2100"></label><label>Von<input id="fromDate" type="date"></label><label>Bis<input id="toDate" type="date"></label></div>
 <div class="row buttons"><button id="applyWeek" type="button" class="neutral">Zeitraum aus KW setzen</button><button id="previousWeek" type="button" class="ghost">Vorherige KW</button><button id="currentWeek" type="button" class="ghost">Aktuelle KW</button></div>
 <label class="cutoff">Lage-Stichtag (Rückblick / Vorschau)<input id="cutoff" type="date"></label>
 <p class="hint">Die Kalenderwoche bestimmt den Berichtszeitraum; der Lage-Stichtag trennt geplante künftige Ereignisse. Keines dieser Felder ersetzt ein fehlendes Ereignisdatum.</p></section>
-<section class="panel" aria-labelledby="title-import"><h2 id="title-import">02 · Datenübernahme</h2>
+<section class="panel" aria-labelledby="title-import"><h2 id="title-import">02 · Datenübernahme</h2><details class="inlinehelp"><summary>Welche White-Lightning-Ausgabe soll ich laden?</summary><p><strong>JSON</strong> wird empfohlen, weil Ereignis- und Meldedatum sowie Quellen beibehalten werden. Das markierte WL-Markdown und die v4.3-Klartextzeilen sind Alternativen. <a href="./hilfe.html#moonshine-import">Importanleitung</a>.</p></details>
 <p class="hint">Bevorzugt die <strong>JSON-Ausgabe von White Lightning</strong>; dessen Markdown mit festen WL-Meldungsmarkierungen wird ebenfalls erkannt. Alternativ Moonshine-4.3-Klartextzeilen mit <code>[EREIGNIS] | …</code> oder anderen Fachkennzeichnungen.</p>
 <div class="drop" id="drop" tabindex="0" role="button" aria-label="Dateien importieren">Dateien hier ablegen oder auswählen<input id="fileInput" type="file" accept=".json,.md,.txt" multiple aria-label="JSON, Markdown oder Klartextdateien auswählen"><small>.json · .md · .txt — keine Roh-PDFs oder MSG direkt in Moonshine</small></div>
 <label class="block">Getaggten Klartext aus Moonshine 4.3 direkt einfügen<textarea id="taggedInput" rows="4" placeholder="[EREIGNIS] | 06.11.2026 | 12:40 | NI | Eine festgestellte Maßnahme ... | Quelle: Musterquelle"></textarea></label>
 <div class="row buttons"><button id="importTagged" type="button">Datensatzzeilen übernehmen</button><a class="hintlink" href="../white-lightning/">White Lightning für MSG / PDF öffnen</a></div>
 <div id="importStatus" class="status" role="status">Bereit. Keine Dateien wurden hochgeladen.</div><details id="importWarnings"><summary>Import- und Prüfhinweise (<span id="warningCount">0</span>)</summary><pre id="warnings"></pre></details></section>
-<section class="panel" aria-labelledby="title-editor"><h2 id="title-editor">03 · Meldungseditor</h2>
+<section class="panel" aria-labelledby="title-editor"><h2 id="title-editor">03 · Meldungseditor</h2><details class="inlinehelp"><summary>Wann wird eine Meldung in das Lagebild übernommen?</summary><p>Nur nach bewusster Prüfung von Rubrik, Ereignisdatum, Quelle und deutschem Text. Anschließend „Sachverhalt und Einordnung redaktionell geprüft“ sowie „Für Lagebild auswählen“ setzen. OSINT bleibt von bestätigten behördlichen Vorgängen getrennt. <a href="./hilfe.html#moonshine-pruefen">Prüfschritte</a>.</p></details>
 <div class="stats"><span id="totalCount">0 Meldungen</span><span id="readyCount">0 geprüft / ausgewählt</span><span id="unknownCount">0 Datum offen</span><span id="englishCount">0 Englisch offen</span></div>
 <div class="row filters"><label>Rubrik<select id="filterCat"><option value="all">Alle Rubriken</option><option value="chronik">Chronologie</option><option value="osint">OSINT</option><option value="control">Kontrollen</option><option value="permit">Genehmigungen</option><option value="ship">Schiffsverkehr</option><option value="expected">Expected</option><option value="force">WSP-Kräfte</option><option value="other">Sonstige</option></select></label><label>Prüfung<select id="filterStatus"><option value="all">Alle Meldungen</option><option value="unknown">Datum ungeklärt</option><option value="english">Übersetzung fehlt</option><option value="pending">Noch nicht freigegeben</option><option value="included">Für Ausgabe ausgewählt</option></select></label><label>Suche<input id="search" type="search" placeholder="Titel, Text oder Quelle"></label></div>
 <div class="row buttons"><button id="addManual" type="button" class="neutral">+ Meldung hinzufügen</button><button id="sortEntries" type="button" class="ghost">Chronologisch sortieren</button></div>
@@ -37,7 +37,7 @@
 </section>
 </div>
 <div>
-<section class="panel"><h2>04 · Ausgabeoptionen</h2>
+<section class="panel"><h2>04 · Ausgabeoptionen</h2><details class="inlinehelp"><summary>Wie werden undatierte und englische Meldungen ausgegeben?</summary><p>Unbekannte Ereignisdaten erscheinen nur bei ausdrücklicher Auswahl in einer gesonderten Prüfrubrik. Englische Originale können als Anhang angefügt werden; sie sind keine zweite Quelle. <a href="./hilfe.html#moonshine-optionen">Ausgabeoptionen</a>.</p></details>
 <label class="check"><input id="showUndated" type="checkbox"> Geprüfte Meldungen ohne Ereignisdatum in separater Prüfrubrik aufnehmen</label>
 <label class="check"><input id="showEnglish" type="checkbox"> Englische Originale als deutlich gekennzeichneten Anhang beifügen</label>
 <label class="check"><input id="includeOutside" type="checkbox"> Geprüfte Meldungen außerhalb des Berichtszeitraums aufnehmen</label>
@@ -45,12 +45,12 @@
 <div class="row buttons"><button id="build" type="button">Lagebild-Vorschau aktualisieren</button><button id="print" type="button" class="gold">PDF / Drucken</button></div>
 <div class="row buttons"><button id="saveMD" type="button" class="ghost">Lagebild als MD</button><button id="saveTXT" type="button" class="ghost">Als TXT</button></div>
 <p id="reportStats" class="status">Noch kein Lagebild aufgebaut.</p></section>
-<section class="panel"><h2>05 · Arbeitsstand</h2><p class="hint">Moonshine speichert nichts automatisch. Sichere den vollständigen redaktionellen Arbeitsstand vor dem Schließen des Browsers.</p>
+<section class="panel"><h2>05 · Arbeitsstand</h2><details class="inlinehelp"><summary>Wie verhindere ich Datenverlust?</summary><p>Vor dem Schließen „Arbeitsstand speichern“ nutzen. Die JSON-Datei lokal und entsprechend ihrer Schutzbedürftigkeit ablegen. <a href="./hilfe.html#moonshine-arbeitsstand">Anleitung</a>.</p></details><p class="hint">Moonshine speichert nichts automatisch. Sichere den vollständigen redaktionellen Arbeitsstand vor dem Schließen des Browsers.</p>
 <div class="row buttons"><button id="saveWorkspace" type="button" class="gold">Arbeitsstand speichern</button><button id="loadWorkspace" type="button" class="ghost">Arbeitsstand laden</button><input id="workspaceInput" type="file" accept=".json" hidden></div>
 <button id="clear" type="button" class="danger">Arbeitsliste leeren</button></section>
 <section class="panel"><h2>Herkunft und Grenzen</h2><p class="hint">Aus Moonshine 3.6: Kalenderwochen, Meldungseditor, getrennte Fachrubriken, Vorschau, Arbeitsstand und PDF-Druck. Aus den v4.3-Prompts: feste Datensatztypen und klare Trennung von tatsächlichen Schiffsbewegungen und erwarteten Anläufen.</p><p class="hint">Diese neue Fassung ist ein <strong>redaktionelles Lagebildwerkzeug</strong>, kein Ersatz für sämtliche Spezialparser der älteren Version 3.6. Original-PDFs, Outlook-Mails und Scans zunächst mit White Lightning und gegebenenfalls zugelassener OCR bearbeiten. Automatische Vortagsableitungen aus 3.6 sind bewusst abgeschaltet.</p><a class="hintlink" href="./hilfe.html">Bedienungsanleitung öffnen</a></section>
 </div></div>
-<section class="panel"><h2>06 · Vorschau</h2><p class="hint">Diese Vorschau ist die Grundlage für die PDF-Druckansicht. Alle Daten und Rubriken sind vor einer dienstlichen Verwendung zu kontrollieren.</p><div id="reportSheet" class="paper"><p class="empty">Noch keine Vorschau erzeugt.</p></div></section>
+<section class="panel"><h2>06 · Vorschau</h2><details class="inlinehelp"><summary>Wie gebe ich das deutsche Lagebild aus?</summary><p>Vorschau kontrollieren, dann über „PDF / Drucken“, „Lagebild als MD“ oder „Als TXT“ exportieren. <a href="./hilfe.html#moonshine-export">Ausgabeanleitung</a>.</p></details><p class="hint">Diese Vorschau ist die Grundlage für die PDF-Druckansicht. Alle Daten und Rubriken sind vor einer dienstlichen Verwendung zu kontrollieren.</p><div id="reportSheet" class="paper"><p class="empty">Noch keine Vorschau erzeugt.</p></div></section>
 </main>
 <footer>MOwlSINT TOOLZ · Moonshine · Lokal im Browser · Redaktionelle Prüfung und Freigabe bleiben erforderlich.</footer>
 <script src="./core.js"></script><script src="./app.js"></script>
