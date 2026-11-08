@@ -90,7 +90,7 @@
     const published=src.published_date&&/^\d{4}-\d{2}-\d{2}$/.test(src.published_date)?dateObj(src.published_date,'known',src.published_basis||'Quellendatum',src.published_evidence||'',{review_required:!!src.published_review}):detectPublished(content,src.filename);
     const url=[...new Set([...(src.urls||[]),...getUrls(content)])].slice(0,60);
     const identity=[src.filename||'',src.page||'',title,content].join('|');
-    return { schema:SCHEMA,id:'wl_'+hash(identity), title, text:content,original_language:detectLanguage(title+' '+content),source_name:src.source_name||null, source_file:src.filename||null,source_type:src.type||'text',source_page:src.page||null,parent_file:src.parent_file||null, urls:url,
+    return { schema:SCHEMA,id:'wl_'+hash(identity), title, text:content,original_language:detectLanguage(title+' '+content),source_name:src.source_name||null, source_file:src.filename||null,source_type:src.type||'text',record_kind:src.type==='document_preamble'||src.extraction_method==='document_preamble'?'document_context':'report_candidate',source_page:src.page||null,source_page_end:src.page_end||null,source_section:src.section||null,extraction_method:src.extraction_method||null,parent_file:src.parent_file||null, urls:url,
       event_date:event,report_date:report,reported_at:src.reported_at||null,received_at:src.received_at||null, publication_date:published,
       translation_de:{title:null,text:null,status:'pending',method:null,reviewed:false}, topics:classify(title+'\n'+content), review: [...(src.warnings||[]),...(cleaning.removed_lines?[`Entfernte technische Warn-/Trennzeilen: ${cleaning.removed_lines}`]:[]),...(content?'':['Kein auslesbarer Nachrichtentext'])], policy:'local_only_review_before_reuse',original_message_id:src.message_id||null,original_hash:hash(identity),status:'ungeprüfter Rohdatenhinweis' };
   }
@@ -115,11 +115,12 @@
         `Meldungszeitpunkt (UTC): ${x.reported_at||'[NICHT ERMITTELT]'}`,
         `Eingangszeitpunkt (UTC): ${x.received_at||'[NICHT ERMITTELT]'}`,
         `Quelle: ${x.source_name||'[NICHT ERMITTELT]'}`,
-        `Fundstelle: ${x.source_file||'[MANUELL]'}${x.source_page?' · Seite '+x.source_page:''}${x.parent_file?' · Anhang zu '+x.parent_file:''}`,
+        `Fundstelle: ${x.source_file||'[MANUELL]'}${x.source_page?' · Seite '+x.source_page+(x.source_page_end&&x.source_page_end!==x.source_page?'–'+x.source_page_end:''):''}${x.source_section?' · '+x.source_section:''}${x.parent_file?' · Anhang zu '+x.parent_file:''}`,
         `Originalsprache: ${x.original_language||'unbestimmt'}`,
         `Themen: ${(x.topics||[]).join(', ')||'[NICHT ZUGEORDNET]'}`,
         `Link(s): ${(x.urls||[]).join(' | ')||'[KEIN LINK ENTHALTEN]'}`,
-        `Bearbeitungsstatus: ${x.status||'ungeprüft'}`);
+        `Datensatztyp: ${x.record_kind==='document_context'?'Dokumentkontext (KEINE Ereignismeldung)':'Meldungskandidat'}`,
+         `Bearbeitungsstatus: ${x.status||'ungeprüft'}`);
       if(translated){lines.push(`Übersetzungsstatus: ${tr.reviewed?'manuell geprüft':'ungeprüft (externes dienstliches Übersetzungsprogramm)'}`,`Zugehöriges englisches Original: ${x.id} (Abschnitt B)`);}
       else if(languageGroup(x)==='en')lines.push(`Deutsche Fassung: ${tr.text?.trim()||tr.title?.trim()?'vorhanden · siehe Abschnitt A':'[NICHT VORHANDEN]'}`);
       if(x.event_date?.basis)lines.push(`Datumsbefund: ${x.event_date.basis}${x.event_date.evidence?' — '+x.event_date.evidence:''}`);
