@@ -96,3 +96,9 @@ Die beiden Anwendungen arbeiten lokal im Browser; der öffentliche GitHub-Reposi
 ## Pflege und Aktualisierung
 
 Bei jeder funktionalen Änderung an White Lightning müssen diese Anleitung und `hilfe.html` gleichzeitig geprüft und angepasst werden. Dies gilt insbesondere für unterstützte Dateiformate, Datumsfelder, manuelle Artikelkorrekturen, Übersetzungen und Exportformate. Bei einer Änderung des JSON-/MD-Übergabevertrags muss zusätzlich [MOONSHINE_IMPORT.md](MOONSHINE_IMPORT.md) angepasst und die Moonshine-Hilfe kontrolliert werden.
+
+## Versionsverlauf
+
+- **08.11.2026 · Version 1.3:** Markdown-Ausgabe, manuelle Artikelkorrekturen und direkter Moonshine-Übergabevertrag; die Bedienungsanleitung ist nun aus dem Tool und über kontextbezogene Hilfelinks erreichbar.
+
+Weitere Funktionsänderungen sind zusammen mit dieser Datei und [hilfe.html](hilfe.html) zu dokumentieren. Siehe [Pflegeregeln](../docs/ANLEITUNGEN_PFLEGE.md).
