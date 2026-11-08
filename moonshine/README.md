@@ -3,7 +3,7 @@
 Ein komplett browserseitiges Redaktionswerkzeug für eine deutschsprachige Wochenlage. Getrennt von **White Lightning**, das ausschließlich strukturierte Rohdaten destilliert. **Moonshine erstellt das Lagebild** nach fachlicher Freigabe der einzelnen Meldungen.
 
 - **Web:** https://mowlsint.github.io/toolz/moonshine/
-- **Anleitung:** [ANLEITUNG.md](ANLEITUNG.md)
+- **Anleitung:** [Hilfe im Browser](hilfe.html) · [Gemeinsame vollständige Bedienungsanleitung](ANLEITUNG.md). Die wichtigsten Arbeitsschritte sind zusätzlich direkt in der Oberfläche erläutert.
 - **Import:** White Lightning `mowlsint.white_lightning.bundle.v1` (`.json`) oder dessen `WL_FORMAT`-Markdown (`.md`); alternativ `.txt`/`.md` mit Moonshine-v4.3-Datensatzkennzeichnungen.
 - **Fachrubriken:** Chronologie, OSINT, Kontrollen, Genehmigungen, Schiffsverkehr, Expected Arrivals, WSP-Kräfte, Sonstiges.
 - **Zeitregel:** Kein Ersatz fehlender Ereignisdaten durch Meldedatum, Veröffentlichungsdatum, Dateinamen oder angenommenen Vortag. Ungeklärte Daten bleiben gesondert.
