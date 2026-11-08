@@ -45,3 +45,15 @@ WL_MSG_FIXTURE_DIR=/lokaler/pfad node white-lightning/tests/test.cjs
 ```
 
 Keinerlei Beispieldaten oder personenbezogene Rohdateien werden mit diesem Tool ausgeliefert.
+
+## Zweisprachiger Ausgabe- und Übersetzungsweg (Version 1.1)
+
+- Abschnitt A des TXT-Exports enthält zuerst deutschsprachige Originalmeldungen und optional manuell eingefügte deutsche Übersetzungen englischer Meldungen.
+- Abschnitt B enthält anschließend **alle englischen Originalmeldungen**, auch wenn bereits eine deutsche Übersetzung hinzugefügt wurde. Gleiche `id`: kein neuer, unabhängiger Sachverhalt.
+- Abschnitt C enthält Meldungen mit gemischter oder nicht zuverlässig erkannter Sprache zur manuellen Prüfung. Die Sprachzuordnung kann im Browser angepasst werden.
+- White Lightning bietet für englische Originalmeldungen **Originaltext kopieren**, **deutsche Überschrift** und **deutschen Text einfügen** an. Dies ist ein manueller Copy/Paste-Workflow mit einem separat zugelassenen **dienstlichen Übersetzungsprogramm**.
+- Es werden **keine Übersetzungsprogramme, Browser-Erweiterungen oder Sprachmodelle heruntergeladen** und keine Texte an Übersetzungsdienste gesendet. Auf dem Dienstrechner sind die dort geltenden Regeln zur Weitergabe in die Übersetzungssoftware einzuhalten.
+- `translation_de` ist ein optionales Objekt am bestehenden Ereignis: `{title, text, status, method, reviewed}`. `external_unreviewed` bedeutet **extern eingefügt und nicht geprüft**; nur eine bewusste manuelle Prüfung setzt `reviewed`. Das Original bleibt unabhängig davon erhalten.
+- Die automatische Sprachkennung ist heuristisch und bei sehr kurzen First Alerts möglicherweise unsicher. Unklare Sprache bleibt als Prüfgruppe erhalten, statt stillschweigend deutsch oder englisch angenommen zu werden.
+
+**Technischer Hinweis:** Die bestehende PDF-Textbibliothek PDF.js wird zurzeit bei PDF-Import von einem CDN geladen. Das ist keine Installation eines Programms oder einer Erweiterung, kann aber durch dienstliche Netzrichtlinien blockiert sein. Für eine vollständig intern gehostete PDF-Funktion müssten wir die Browserbibliothek im `toolz`-Repository selbst bereitstellen; aktuell bleibt der PDF-Import abhängig vom erlaubten Browserzugriff.
