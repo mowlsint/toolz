@@ -4,7 +4,7 @@
 
 **Web:** `https://mowlsint.github.io/toolz/white-lightning/`
 
-**Version 1.3:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung. Ergänzt: manuelles Aufteilen/Zusammenführen, Rückgängig-Funktion und Markdown-Export mit festem Kennungsformat.
+**Anschluss an Moonshine:** Die erste [Moonshine-Lagebildredaktion (Version 4.4, Testfassung)](../moonshine/) kann White-Lightning-JSON und das markierte Markdown direkt einlesen. [Gemeinsame Bedienungsanleitung](../moonshine/ANLEITUNG.md).\n\n**Version 1.3:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung. Ergänzt: manuelles Aufteilen/Zusammenführen, Rückgängig-Funktion und Markdown-Export mit festem Kennungsformat.
 
 ## Formate
 
