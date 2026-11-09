@@ -26,7 +26,7 @@
 
 Im Bereich **„01 · Rohdaten einlesen“** mit der Dateiauswahl oder per Drag & Drop Dateien übernehmen. Unterstützt sind `.msg`, `.eml`, `.pdf`, `.txt`, `.md`, `.html`, `.json` und `.jsonl` (bis 40 MB je Datei). Bei lesbaren Outlook-Nachrichten können unterstützte Anhänge mit übernommen werden.
 
-Alternativ im Bereich **„02 · Text manuell eingeben“** eine Quelle angeben, einen Alert hineinkopieren und **„Text übernehmen“** anklicken. Mehrere Meldungen können durch eine eigene Zeile mit `---` getrennt werden.
+**Hinweis zu Outlook-Drag-and-drop (White Lightning 1.3.1, 09.11.2026):** E-Mails unmittelbar aus Outlook lassen sich abhängig von Outlook-Version und Browser nur teilweise ablegen. Wenn Outlook keine physische Maildatei liefert, meldet White Lightning das ausdrücklich. E-Mail dann als `.msg` oder `.eml` in einen zulässigen lokalen Ordner speichern und diese Datei importieren. Ein reiner Text-Fallback enthält keine verifizierten Mail-Metadaten und keine Anhänge.\n\nAlternativ im Bereich **„02 · Text manuell eingeben“** eine Quelle angeben, einen Alert hineinkopieren und **„Text übernehmen“** anklicken. Mehrere Meldungen können durch eine eigene Zeile mit `---` getrennt werden.
 
 Bei Markdown dienen wiederkehrende Überschriften, bei TXT erkennbare Nummerierungen oder Trennlinien als **Vorschläge** für Abschnittsgrenzen; sie sind noch nicht automatisch fachlich geprüft.
 
