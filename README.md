@@ -100,3 +100,14 @@ Beide Tools enthalten jetzt einen sichtbaren Einstieg **„? HILFE / ANLEITUNG�
 - [Pflege-Checkliste](docs/ANLEITUNGEN_PFLEGE.md) · Prüfskript: `node docs/check-guides.cjs`
 
 Bei jeder nutzerrelevanten Programmänderung sind die entsprechenden Hilfeseiten und Versionshinweise im selben Änderungsvorgang zu aktualisieren. Für Änderungen der Schnittstelle White Lightning → Moonshine zusätzlich `white-lightning/MOONSHINE_IMPORT.md` prüfen.
+
+## Verlinkte GitHub-Projekte
+
+Das TOOLZ-Portal verlinkt auch die eigenständigen GitHub-Repositories:
+
+- [Voodoo Whiskers](https://github.com/mowlsint/VoodooWhiskers)
+- [Magic Paws](https://github.com/mowlsint/MagicPaws) (**privat**; Zugriff nur mit GitHub-Berechtigung)
+- [Pelican](https://github.com/mowlsint/pelican)
+- [MARD_HAT](https://github.com/mowlsint/mard-hybrid-telemetry)
+
+Die Einträge führen direkt zum Repository, nicht zu einer eventuell separaten Web-Anwendung.
