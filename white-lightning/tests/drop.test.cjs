@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const WLDrop=require('./wl-drop.js');
+const file=(name)=>({name,arrayBuffer:async()=>new ArrayBuffer(10),size:10});
+const f=file('Meldung.msg');
+assert.deepEqual(WLDrop.assessDrop({files:[f]}).files,[f]);
+assert.deepEqual(WLDrop.assessDrop({files:[],items:[{kind:'file',getAsFile:()=>f}]}).files,[f]);
+assert.equal(WLDrop.assessDrop({files:[],items:[{kind:'file',getAsFile:()=>null}],types:['Files']}).kind,'unavailable');
+const email='From: Person <a@b.example>\nSent: Nov 9, 2026\nSubject: Ships at port\n\nA ship has arrived at the port to take on supplies. Follow-up information is expected shortly.';
+assert.equal(WLDrop.assessDrop({getData:x=>x==='text/plain'?email:''}).kind,'text');
+assert.equal(WLDrop.assessDrop({getData:()=> 'https://outlook.office365.com/mail/id/abc',types:['text/uri-list']}).kind,'unavailable');
+assert.equal(WLDrop.assessDrop({getData:()=> 'Shipping notification'}).kind,'unavailable');
+assert.equal(WLDrop.mailLikeText('A'.repeat(400)),false);
+assert.equal(WLDrop.assessDrop({files:[f],getData:()=>email}).kind,'files');
+console.log('White Lightning Outlook drop adapter tests: OK');
