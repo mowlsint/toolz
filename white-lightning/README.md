@@ -8,7 +8,7 @@
 
 **Anschluss an Moonshine:** Die erste [Moonshine-Lagebildredaktion (Version 4.4, Testfassung)](../moonshine/) kann White-Lightning-JSON und das markierte Markdown direkt einlesen. [Gemeinsame Bedienungsanleitung](../moonshine/ANLEITUNG.md).
 
-**Version 1.3:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung. Ergänzt: manuelles Aufteilen/Zusammenführen, Rückgängig-Funktion und Markdown-Export mit festem Kennungsformat.
+**Version 1.3.1 (09.11.2026):** Verbesserter Drag-and-drop-Import aus Outlook: alternative Dateiobjekte, aussagekräftige Rückmeldung, Text-Fallback ohne erfundene E-Mail-Metadaten und ausdrückliche Kopieroperation zum Schutz vor Verschieben. Bei nicht bereitgestellten Outlook-Dateien E-Mail zuerst als `.msg`/`.eml` in einem zulässigen lokalen Ordner speichern; ein direkter Drag aus Outlook kann je nach Client/Browser technisch unmöglich bleiben.\n\n**Version 1.3:** Konservative Markdown-/Textabschnittserkennung; PDF-Textspalten als Kandidaten getrennt; eindeutig datierte Eintragsköpfe in strukturierten Berichten auch über Seitenumbrüche verknüpft. Kein OCR-Zwang, keine automatische Artikel-Faktenerfindung. Ergänzt: manuelles Aufteilen/Zusammenführen, Rückgängig-Funktion und Markdown-Export mit festem Kennungsformat.
 
 ## Formate
 
