@@ -66,6 +66,7 @@ h1{font-size:23px}
   .quick-link{padding:14px 6px}
 }
 .repo-links{margin-top:34px}.repo-links .section-head{padding-bottom:13px}.repo-links .section-head h2{font-size:17px;letter-spacing:.13em}.repo-private{font-size:11px;font-weight:500;color:#85693e}
+.repo-list{display:flex;flex-direction:column}.repo-entry{border-bottom:1px solid var(--border);padding:15px 3px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between}.repo-entry-title{display:flex;flex:1;min-width:150px;flex-wrap:wrap;gap:3px 7px;align-items:baseline}.repo-entry-title strong{font-size:14px;color:var(--navy)}.repo-entry-note{width:100%;font-size:11px;color:#6b716c}.repo-entry-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.repo-entry-links a{display:inline-block;border:1px solid var(--border);padding:7px 9px;font-size:11px;font-weight:740;color:var(--navy);text-decoration:none;white-space:nowrap}.repo-entry-links a:hover{background:#ece3d1}.repo-pending{font-size:11px;color:#6d716c}
 </style>
 </head>
 <body>
@@ -123,12 +124,36 @@ h1{font-size:23px}
       <a class="quick-link" href="https://mowlsint.github.io/telegram_watch/index.html" target="_blank" rel="noopener noreferrer"><span>Telegram Watch</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
     </div>
     <section class="repo-links" aria-labelledby="repos-heading">
-      <div class="section-head"><h2 id="repos-heading">REPOSITORIES</h2><span class="count">04</span></div>
-      <div class="quick-links">
-      <a class="quick-link" href="https://github.com/mowlsint/VoodooWhiskers" target="_blank" rel="noopener noreferrer"><span>Voodoo Whiskers</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
-      <a class="quick-link" href="https://github.com/mowlsint/MagicPaws" target="_blank" rel="noopener noreferrer" title="Privates GitHub-Repository – Anmeldung und Berechtigung erforderlich"><span>Magic Paws <small class="repo-private">(privat)</small></span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
-      <a class="quick-link" href="https://github.com/mowlsint/pelican" target="_blank" rel="noopener noreferrer"><span>Pelican</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
-      <a class="quick-link" href="https://github.com/mowlsint/mard-hybrid-telemetry" target="_blank" rel="noopener noreferrer"><span>MARD_HAT</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+      <div class="section-head"><h2 id="repos-heading">REPOSITORIES &amp; WEB-APPS</h2><span class="count">04</span></div>
+      <div class="repo-list">
+        <div class="repo-entry">
+          <div class="repo-entry-title"><strong>Voodoo Whiskers</strong><small class="repo-entry-note">GitHub Pages</small></div>
+          <div class="repo-entry-links">
+            <a href="https://github.com/mowlsint/VoodooWhiskers" target="_blank" rel="noopener noreferrer" aria-label="Voodoo Whiskers auf GitHub öffnen">GitHub</a>
+            <a href="https://mowlsint.github.io/VoodooWhiskers/public/" target="_blank" rel="noopener noreferrer" aria-label="Voodoo Whiskers Weboberfläche öffnen">Karte öffnen</a>
+          </div>
+        </div>
+        <div class="repo-entry">
+          <div class="repo-entry-title"><strong>Magic Paws</strong> <small class="repo-private">(Repository privat)</small><small class="repo-entry-note">Cloudflare Pages</small></div>
+          <div class="repo-entry-links">
+            <a href="https://github.com/mowlsint/MagicPaws" target="_blank" rel="noopener noreferrer" aria-label="Magic Paws auf GitHub öffnen">GitHub</a>
+            <a href="https://magicpaws-full-custom.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="Magic Paws Weboberfläche öffnen">Dashboard öffnen</a>
+          </div>
+        </div>
+        <div class="repo-entry">
+          <div class="repo-entry-title"><strong>Pelican</strong><small class="repo-entry-note">Cloudflare-Staging und Freigabe ausstehend</small></div>
+          <div class="repo-entry-links">
+            <a href="https://github.com/mowlsint/pelican" target="_blank" rel="noopener noreferrer" aria-label="Pelican auf GitHub öffnen">GitHub</a>
+            <span class="repo-pending" title="Kein bestätigtes Pages-Deployment">Webseite in Vorbereitung</span>
+          </div>
+        </div>
+        <div class="repo-entry">
+          <div class="repo-entry-title"><strong>MARD_HAT</strong><small class="repo-entry-note">Cloudflare Pages</small></div>
+          <div class="repo-entry-links">
+            <a href="https://github.com/mowlsint/mard-hybrid-telemetry" target="_blank" rel="noopener noreferrer" aria-label="MARD_HAT auf GitHub öffnen">GitHub</a>
+            <a href="https://mard-hybrid-telemetry.pages.dev/" target="_blank" rel="noopener noreferrer" aria-label="MARD_HAT Weboberfläche öffnen">Webseite öffnen</a>
+          </div>
+        </div>
       </div>
     </section>
   </nav>
