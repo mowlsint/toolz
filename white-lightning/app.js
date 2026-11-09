@@ -1,7 +1,7 @@
 /* MOwlSINT White Lightning browser app: source files only in JS memory. */
 (() => {
 'use strict';
-const C=window.WLCore,M=window.WLMsg,D=window.WLDocument,E=window.WLEdit;const $=id=>document.getElementById(id);const state={items:[],files:0,errors:[],duplicates:0,editUndo:[]};let pdfReady=null;
+const C=window.WLCore,M=window.WLMsg,D=window.WLDocument,E=window.WLEdit,WD=window.WLDrop;const $=id=>document.getElementById(id);const state={items:[],files:0,errors:[],duplicates:0,editUndo:[]};let pdfReady=null;
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const size=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB';
 const basename=n=>String(n||'').split(/[\\/]/).pop();
@@ -114,7 +114,50 @@ function handleChange(e){const t=e.target;const i=Number(t.dataset.i);if(!Number
  if(t.dataset.field){if(t.dataset.field==='urls')r.urls=t.value.split('\n').map(x=>x.trim()).filter(Boolean);else {r[t.dataset.field]=t.value;if(t.dataset.field==='text'){if(!(r.review||[]).includes('Originaltext wurde manuell korrigiert; Datums- und Quellenzuordnung prüfen.'))r.review=[...(r.review||[]),'Originaltext wurde manuell korrigiert; Datums- und Quellenzuordnung prüfen.'];r.event_date={...r.event_date,review_required:true};$('textPreview').value=C.asText(state.items,{includeContent:$('fulltext').checked});return;}}render();}
 }
 $('fileInput').addEventListener('change',e=>{importFiles([...e.target.files]);e.target.value='';});
-const drop=$('drop');drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag');});drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');importFiles([...e.dataTransfer.files]);});
+const drop=$('drop'),dropStatus=$('dropStatus');
+function dropMessage(message,isError=false){
+ dropStatus.textContent=message;
+ dropStatus.classList.toggle('error',isError);
+}
+document.addEventListener('dragover',event=>{
+ if(!drop.contains(event.target))return;
+ event.preventDefault();
+ if(event.dataTransfer)event.dataTransfer.dropEffect='copy'; // Outlook-Mails nie per Verschieben entfernen.
+ drop.classList.add('drag');
+},true);
+document.addEventListener('dragenter',event=>{if(drop.contains(event.target))drop.classList.add('drag');},true);
+document.addEventListener('dragleave',event=>{if(!event.relatedTarget||!drop.contains(event.relatedTarget))drop.classList.remove('drag');},true);
+document.addEventListener('drop',event=>{
+ if(!drop.contains(event.target))return;
+ event.preventDefault();
+ event.stopPropagation();
+ drop.classList.remove('drag');
+ const result=WD.assessDrop(event.dataTransfer); // Synchron lesen: Transferdaten sind nur während drop zugänglich.
+ if(result.kind==='files'){
+  dropMessage(result.files.length+' Datei(en) erkannt. Importiere lokal …');
+  importFiles(result.files).then(()=>{
+    dropMessage(result.files.length+' Datei(en) verarbeitet. '+state.items.length+' Meldungsblöcke in der Arbeitsliste; Importhinweise unten prüfen.');
+  }).catch(err=>{
+    dropMessage('Dateiimport fehlgeschlagen: '+err.message,true);
+    note('Dateiimport fehlgeschlagen: '+err.message,true);
+  });
+  return;
+ }
+ if(result.kind==='text'){
+  const count=importText(result.text,'Outlook-Drop.txt',{
+   type:'outlook_drop_text',source_name:'Text aus E-Mail-Drag-and-drop (Metadaten nicht verifiziert)',
+   warnings:['Outlook hat nur kopierten Nachrichtentext übergeben, keine MSG/EML-Datei. Versand-/Eingangszeit und Anhänge fehlen; Quelle und Ereignisdatum manuell prüfen.']
+  });
+  state.editUndo=[];dedupe();render();
+  dropMessage(count+' Textmeldung(en) übernommen. Achtung: Mailmetadaten und Anhänge wurden nicht mit übertragen.');
+  note('Outlook-Text übernommen, Quelle/Datum/Anhänge bitte prüfen.');
+  return;
+ }
+ const extra=result.hasLink?' Outlook hat lediglich einen Link statt des Mailinhalts übergeben.':'';
+ const tip='Outlook übergibt hier keine auslesbare Datei.'+extra+' Speichere die E-Mail zuerst als .msg oder .eml in einem dienstlich zulässigen Ordner und ziehe diese Datei hierher. Alternativ E-Mail-Text öffnen, kopieren und in „Text manuell eingeben“ übernehmen.';
+ dropMessage(tip,true);
+ note(tip,true);
+},true);
 $('addText').addEventListener('click',()=>{const s=$('manual').value;if(!s.trim()){note('Bitte Text eingeben.',true);return;}const n=importText(s,'Manueller Import',{source_name:$('manualSource').value.trim()||'Manuell'});$('manual').value='';state.editUndo=[];dedupe();render();note(`${n} Textabschnitte übernommen.`);});
 $('list').addEventListener('change',handleChange);
 $('list').addEventListener('click',e=>{
