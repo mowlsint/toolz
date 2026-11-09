@@ -101,13 +101,15 @@ Beide Tools enthalten jetzt einen sichtbaren Einstieg **„? HILFE / ANLEITUNG�
 
 Bei jeder nutzerrelevanten Programmänderung sind die entsprechenden Hilfeseiten und Versionshinweise im selben Änderungsvorgang zu aktualisieren. Für Änderungen der Schnittstelle White Lightning → Moonshine zusätzlich `white-lightning/MOONSHINE_IMPORT.md` prüfen.
 
-## Verlinkte GitHub-Projekte
+## Verlinkte Repositories und Weboberflächen
 
-Das TOOLZ-Portal verlinkt auch die eigenständigen GitHub-Repositories:
+Das TOOLZ-Portal zeigt bei jedem Projekt den GitHub-Quellcode und, soweit die tatsächliche Zieladresse belegt ist, einen separaten Link zur veröffentlichten Webseite.
 
-- [Voodoo Whiskers](https://github.com/mowlsint/VoodooWhiskers)
-- [Magic Paws](https://github.com/mowlsint/MagicPaws) (**privat**; Zugriff nur mit GitHub-Berechtigung)
-- [Pelican](https://github.com/mowlsint/pelican)
-- [MARD_HAT](https://github.com/mowlsint/mard-hybrid-telemetry)
+| Projekt | GitHub-Repository | Weboberfläche | Status |
+| --- | --- | --- | --- |
+| Voodoo Whiskers | [Repository](https://github.com/mowlsint/VoodooWhiskers) | [GitHub Pages](https://mowlsint.github.io/VoodooWhiskers/public/) | In Magic-Paws-Projektdateien als Kartenlink dokumentiert |
+| Magic Paws | [Repository](https://github.com/mowlsint/MagicPaws) | [Cloudflare Pages](https://magicpaws-full-custom.pages.dev/) | In Magic-Paws-Programmkonfiguration als Dashboard-URL hinterlegt; Repository privat |
+| Pelican | [Repository](https://github.com/mowlsint/pelican) | Noch kein bestätigter Live-Link | README: Cloudflare-Staging/Produktionsfreigabe stehen aus |
+| MARD_HAT | [Repository](https://github.com/mowlsint/mard-hybrid-telemetry) | [Cloudflare Pages](https://mard-hybrid-telemetry.pages.dev/) | In Magic-Paws-Integration als öffentliches Dashboard verlinkt |
 
-Die Einträge führen direkt zum Repository, nicht zu einer eventuell separaten Web-Anwendung.
+**Hinweis:** Die Zieladressen sind anhand der Repository-Dateien geprüft. Eine unabhängige Live-Erreichbarkeitsprüfung der Pages-Websites war in der aktuellen Ausführungsumgebung nicht möglich. Die Einträge verweisen auf Weboberflächen, nicht nur auf den Quellcode.
