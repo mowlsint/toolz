@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path');
 const base=path.join(__dirname,'..');
 const get=p=>fs.readFileSync(path.join(base,p),'utf8');
 const specs=[
- {dir:'white-lightning',version:'1.3',ids:['import','pdf-ocr','datumspruefung','artikelgrenzen','sprachen','export']},
+ {dir:'white-lightning',version:'1.3.1',ids:['import','pdf-ocr','datumspruefung','artikelgrenzen','sprachen','export']},
  {dir:'moonshine',version:'4.4',ids:['moonshine-guide','moonshine-zeitraum','moonshine-import','moonshine-pruefen','moonshine-optionen','moonshine-export','moonshine-arbeitsstand']}
 ];
 let fails=0;
