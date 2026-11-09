@@ -3,10 +3,10 @@
 <meta name="color-scheme" content="light"><title>White Lightning · Bedienungsanleitung</title>
 <link rel="stylesheet" href="../moonshine/style.css"><link rel="stylesheet" href="../moonshine/guide.css">
 <style>.manualnav{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 24px}.manualnav a{color:#183854;text-decoration:underline}.docmeta{font-size:12px;color:#555}.guide h3{scroll-margin-top:24px}</style>
-</head><body><header><div class="wrap topbar"><a class="identity" href="./"><span class="logomark">WL</span><span><strong>WHITE LIGHTNING</strong><small>BEDIENUNGSANLEITUNG · VERSION 1.3</small></span></a><a class="back" href="./">← WHITE LIGHTNING</a></div></header>
+</head><body><header><div class="wrap topbar"><a class="identity" href="./"><span class="logomark">WL</span><span><strong>WHITE LIGHTNING</strong><small>BEDIENUNGSANLEITUNG · VERSION 1.3.1</small></span></a><a class="back" href="./">← WHITE LIGHTNING</a></div></header>
 <main class="wrap manual"><article class="paper guide">
 <h1>White Lightning · Bedienungsanleitung</h1>
-<p class="docmeta"><strong>Stand:</strong> 8. November 2026 · gilt für White Lightning 1.3. Bei jeder Funktionsänderung sind diese Anleitung, das Markdown-Handbuch und der Versionsverlauf gemeinsam zu aktualisieren.</p>
+<p class="docmeta"><strong>Stand:</strong> 9. November 2026 · gilt für White Lightning 1.3.1. Bei jeder Funktionsänderung sind diese Anleitung, das Markdown-Handbuch und der Versionsverlauf gemeinsam zu aktualisieren.</p>
 <p><strong>Zweck:</strong> Outlook-Meldungen, PDF, TXT und Markdown zu belegbaren Einzelmeldungen destillieren. <strong>White Lightning erstellt kein Lagebild.</strong> Die anschließende deutsche Lagebild-Erstellung erfolgt in <a href="../moonshine/">Moonshine</a>.</p>
 <nav class="manualnav" aria-label="Zu den Anleitungsschritten">
 <a href="#import">Import</a><a href="#pdf-ocr">PDF/OCR</a><a href="#datumspruefung">Prüfung</a><a href="#artikelgrenzen">Artikelgrenzen</a><a href="#sprachen">Sprachen</a><a href="#export">Export</a>
@@ -14,6 +14,7 @@
 <h2 id="start">White Lightning – Rohdatendestillat herstellen</h2>
 <p><strong>Öffnen:</strong> <a href="https://mowlsint.github.io/toolz/white-lightning/">https://mowlsint.github.io/toolz/white-lightning/</a></p>
 <h3 id="import">Schritt 1 – Dateien importieren</h3>
+<div class="notice"><strong>Direkt aus Outlook ziehen:</strong> In Outlook Classic und einem kompatiblen Browser kann eine .msg-Datei direkt übertragen werden. Im neuen Outlook funktioniert dies teilweise nicht. Wenn das Ablegen keine Datei liefert, zeigt White Lightning eine Fehlermeldung. In diesem Fall die Nachricht zuerst als <code>.msg</code> oder <code>.eml</code> im dienstlich zulässigen Ordner speichern, anschließend die gespeicherte Datei ziehen. Wird nur Mailtext erkannt, werden weder Anhänge noch sichere Outlook-Zeitstempel importiert. Bitte Quelle und Ereignisdatum kontrollieren. Für die Übergabe wird die Aktion <strong>Kopieren</strong> angefordert, um kein Verschieben der Nachricht auszulösen.</div>
 <p>Im Bereich <strong>„01 · Rohdaten einlesen“</strong> mit der Dateiauswahl oder per Drag &amp; Drop Dateien übernehmen. Unterstützt sind <code>.msg</code>, <code>.eml</code>, <code>.pdf</code>, <code>.txt</code>, <code>.md</code>, <code>.html</code>, <code>.json</code> und <code>.jsonl</code> (bis 40 MB je Datei). Bei lesbaren Outlook-Nachrichten können unterstützte Anhänge mit übernommen werden.</p>
 <p>Alternativ im Bereich <strong>„02 · Text manuell eingeben“</strong> eine Quelle angeben, einen Alert hineinkopieren und <strong>„Text übernehmen“</strong> anklicken. Mehrere Meldungen können durch eine eigene Zeile mit <code>---</code> getrennt werden.</p>
 <p>Bei Markdown dienen wiederkehrende Überschriften, bei TXT erkennbare Nummerierungen oder Trennlinien als <strong>Vorschläge</strong> für Abschnittsgrenzen; sie sind noch nicht automatisch fachlich geprüft.</p>
