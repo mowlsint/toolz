@@ -1,6 +1,6 @@
-# White Lightning – Bedienungsanleitung (Version 1.3)
+# White Lightning – Bedienungsanleitung (Version 1.3.1)
 
-**Stand:** 8. November 2026. **Zweck:** Lokale Rohdatendestillation, kein Lagebild. Die deutsche Wochenlage wird separat mit [Moonshine](../moonshine/) erstellt.
+**Stand:** 9. November 2026. **Zweck:** Lokale Rohdatendestillation, kein Lagebild. Die deutsche Wochenlage wird separat mit [Moonshine](../moonshine/) erstellt.
 
 **Im Browser lesen:** [Hilfe innerhalb von White Lightning](hilfe.html). **Moonshine-Anleitung:** [Moonshine-Hilfe](../moonshine/hilfe.html).
 
@@ -12,7 +12,7 @@
 
 Im Bereich **„01 · Rohdaten einlesen“** mit der Dateiauswahl oder per Drag & Drop Dateien übernehmen. Unterstützt sind `.msg`, `.eml`, `.pdf`, `.txt`, `.md`, `.html`, `.json` und `.jsonl` (bis 40 MB je Datei). Bei lesbaren Outlook-Nachrichten können unterstützte Anhänge mit übernommen werden.
 
-Alternativ im Bereich **„02 · Text manuell eingeben“** eine Quelle angeben, einen Alert hineinkopieren und **„Text übernehmen“** anklicken. Mehrere Meldungen können durch eine eigene Zeile mit `---` getrennt werden.
+**E-Mail direkt aus Outlook ziehen:** Bei Outlook Classic mit Edge/Chrome kann die Nachricht als `.msg` ankommen. Bei neuem Outlook oder anderen Browsern wird gelegentlich keine Datei bereitgestellt. White Lightning zeigt dann jetzt einen Fehlerhinweis statt still zu scheitern. In diesem Fall die Mail zuerst in einem **dienstlich zulässigen lokalen Ordner** als `.msg` oder `.eml` speichern, danach die gespeicherte Datei hineinziehen oder über die Dateiauswahl einlesen. Wenn Outlook nur Nachrichtentext überträgt, wird er als prüfpflichtiger Textimport ohne verifizierte Versandzeit und **ohne Anhänge** übernommen. White Lightning fordert dabei ausdrücklich einen **Kopier-** statt Verschiebevorgang an; dies sollte mit dem verwendeten Outlook getestet werden. Es ist **keine Installation oder Outlook-Anbindung** erforderlich.\n\nAlternativ im Bereich **„02 · Text manuell eingeben“** eine Quelle angeben, einen Alert hineinkopieren und **„Text übernehmen“** anklicken. Mehrere Meldungen können durch eine eigene Zeile mit `---` getrennt werden.
 
 Bei Markdown dienen wiederkehrende Überschriften, bei TXT erkennbare Nummerierungen oder Trennlinien als **Vorschläge** für Abschnittsgrenzen; sie sind noch nicht automatisch fachlich geprüft.
 
